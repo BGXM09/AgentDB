@@ -1,0 +1,3 @@
+import Link from "next/link";
+import { AltanaWalletPanel } from "@/components/altana-wallet-panel";
+export default function AltanaWalletPage() { return <main className="container page-content"><div className="breadcrumb"><Link href="/">Home</Link><span>/</span>Altana Wallet</div><div className="page-heading"><div><h1>Altana Commerce Wallet</h1><p>Official passkey wallet for ERC-8183 hiring on BSC Testnet.</p></div></div><div className="notice info-notice"><b>Separate by design.</b> Your wagmi wallet remains the identity/claim wallet. Altana’s passkey-backed smart wallet is the buyer and signer passed to <code>hireErc8183Agent</code>; no custom wallet adapter or escrow logic is used.</div><AltanaWalletPanel /></main>; }

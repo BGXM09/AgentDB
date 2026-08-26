@@ -1,0 +1,5 @@
+import Link from "next/link";
+
+export default function TasksPage() {
+  return <main className="container page-content"><div className="breadcrumb"><Link href="/">Home</Link><span>/</span>Tasks</div><div className="page-heading"><div><h1>Task Explorer</h1><p>ERC-8183 jobs mediated and verified by AgentDB.</p></div><span className="count-pill">0 indexed tasks</span></div><div className="notice warning-notice"><b>No production task data exists yet.</b> Agent registrations and transactions are not tasks. This table will populate only from verified ERC-8183 lifecycle evidence.</div><section className="panel table-panel"><div className="panel-title"><h2>Latest Tasks</h2></div><div className="table-scroll"><table className="explorer-table"><thead><tr><th>Task ID</th><th>Agent</th><th>Client</th><th>Service</th><th>Budget</th><th>Status</th><th>Age</th></tr></thead><tbody></tbody></table></div><div className="empty"><span className="empty-symbol">T</span><b>No AgentDB tasks found</b><p>A real funded ERC-8183 job is required before a task can appear here.</p></div></section></main>;
+}
