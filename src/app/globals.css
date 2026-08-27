@@ -1730,6 +1730,30 @@ body {
   background: #121212;
   color: #fff;
 }
+.bento-ascii {
+  position: absolute;
+  inset: -4%;
+  width: 108%;
+  height: 108%;
+  object-fit: cover;
+  opacity: 0.22;
+  filter: grayscale(1) contrast(1.2) brightness(0.72);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.bento-ascii-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(180deg, rgba(18, 18, 18, 0.5), rgba(18, 18, 18, 0.18) 42%, #121212 92%),
+    linear-gradient(90deg, rgba(18, 18, 18, 0.76), transparent 78%);
+  pointer-events: none;
+}
+.stats-bento-primary > :not(.bento-ascii):not(.bento-ascii-veil) {
+  position: relative;
+  z-index: 1;
+}
 .stats-bento-shapes {
   position: absolute;
   inset: 0;
@@ -2126,6 +2150,11 @@ input:focus-visible {
   .stats-bento-small.availability {
     grid-column: 1/-1;
     min-height: 90px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bento-ascii {
+    display: none;
   }
 }
 
