@@ -13,7 +13,7 @@ export function AgentTable({ agents, showCategory = true, hideAgentId = false, i
     {agents.map((agent) => {
       const normalized = normalizeAgent(agent);
       const audit = auditedStatus[agent.token_id];
-      const category = normalized.derived.category === "Other" ? "Unclassified" : normalized.derived.category;
+      const category = normalized.derived.category === "Other" ? "General purpose" : normalized.derived.category;
       const displayName = displayAgentName(normalized.canonical.name, agent.token_id);
 
       return <Link className={`agent-registry-card${imageLed ? " image-led-agent-card" : ""}`} href={`/agents/${agent.token_id}`} key={agent.id}>

@@ -3,6 +3,15 @@ export type AgentCategory =
   | "Grid Trading"
   | "Yield Optimisation"
   | "Health Factor Monitoring"
+  | "Trading & Markets"
+  | "DeFi & Finance"
+  | "Security & Risk"
+  | "Data & Analytics"
+  | "Developer Tools"
+  | "Content & Research"
+  | "Commerce & Payments"
+  | "Automation"
+  | "General Assistant"
   | "Other";
 
 export interface ScanAgentSummary {
@@ -31,6 +40,7 @@ export interface ScanAgentSummary {
 }
 
 export interface ScanAgentDetail extends ScanAgentSummary {
+  tags?: string[] | null;
   services?: unknown[] | Record<string, unknown> | null;
   endpoints?: unknown[];
   metadata?: Record<string, unknown> | null;
