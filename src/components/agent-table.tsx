@@ -7,7 +7,7 @@ import type { ScanAgentDetail } from "@/lib/agents/types";
 import { StatusBadge } from "./status-badge";
 import { AgentAvatar } from "./agent-avatar";
 
-export function AgentTable({ agents, showCategory = true }: { agents: ScanAgentDetail[]; showCategory?: boolean }) {
+export function AgentTable({ agents, showCategory = true, hideAgentId = false, imageLed = false }: { agents: ScanAgentDetail[]; showCategory?: boolean; hideAgentId?: boolean; imageLed?: boolean }) {
   if (!agents.length) return <div className="empty"><b>No agents found.</b><p>No real indexed records matched this view.</p></div>;
 
   return <div className="agent-card-grid">
@@ -18,8 +18,9 @@ export function AgentTable({ agents, showCategory = true }: { agents: ScanAgentD
       const category = normalized.derived.category === "Other" ? "Unclassified" : normalized.derived.category;
       const displayName = displayAgentName(normalized.canonical.name, agent.token_id);
 
-      return <Link className="agent-registry-card" href={`/agents/${agent.token_id}`} key={agent.id}>
-        <div className="agent-card-top"><span className="agent-card-id">#{agent.token_id}</span><span className="agent-card-arrow" aria-hidden="true">↗</span></div>
+      return <Link className={`agent-registry-card${imageLed ? " image-led-agent-card" : ""}`} href={`/agents/${agent.token_id}`} key={agent.id}>
+        {imageLed && normalized.canonical.imageUrl && <AgentAvatar imageUrl={normalized.canonical.imageUrl} name={displayName} artwork />}
+        <div className="agent-card-top">{!hideAgentId && <span className="agent-card-id">#{agent.token_id}</span>}<span className="agent-card-arrow" aria-hidden="true">↗</span></div>
         <div className="agent-card-identity"><AgentAvatar imageUrl={normalized.canonical.imageUrl} name={displayName} /><div><strong>{displayName}</strong><code>{short(agent.owner_address)}</code></div></div>
         <div className="agent-card-facts">
           {showCategory && <div><span>Category</span><b>{category}</b></div>}

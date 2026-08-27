@@ -41,6 +41,19 @@ export async function listBscAgents(options: { limit?: number; offset?: number }
   return request<ScanAgentPage>("/agents", params);
 }
 
+export async function listPopularBscAgents(limit = 10) {
+  const params = new URLSearchParams({
+    chain_id: "56",
+    is_testnet: "false",
+    period: "all",
+    sort_by: "popularity_score",
+    limit: String(Math.min(Math.max(limit, 1), 100)),
+    offset: "0",
+    group_cross_chain: "false",
+  });
+  return request<ScanAgentPage>("/agents/leaderboard", params);
+}
+
 export async function searchBscAgents(query: string, limit = 10) {
   const params = new URLSearchParams({ q: query, chain_id: "56", limit: String(Math.min(limit, 100)) });
   return request<ScanAgentPage>("/agents/search/semantic", params);
