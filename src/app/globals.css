@@ -2841,22 +2841,33 @@ input:focus-visible {
   background: #f3f3f3;
   color: #121212;
 }
-.category-ascii {
+.category-image {
   position: absolute;
-  top: 10px;
-  right: 14px;
-  margin: 0;
-  color: #121212;
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -1px;
-  opacity: 0.12;
+  top: 0;
+  right: 0;
+  width: 52%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 34%;
+  opacity: 0.22;
+  filter: grayscale(1) contrast(1.28);
+  mix-blend-mode: multiply;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 38%, #000 100%);
   pointer-events: none;
-  white-space: pre;
 }
-.stats-bento-category > :not(.category-ascii) {
+.category-image-grid-trading {
+  width: 58%;
+  object-position: center 48%;
+}
+.category-image-yield-optimisation {
+  width: 48%;
+  object-position: center 58%;
+}
+.category-image-health-factor-monitoring {
+  width: 55%;
+  object-position: center 36%;
+}
+.stats-bento-category > :not(.category-image) {
   position: relative;
   z-index: 1;
 }
