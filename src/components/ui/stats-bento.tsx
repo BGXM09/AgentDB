@@ -46,8 +46,8 @@ export const StatsBento = ({ indexedAgents, categoryCount, auditedProfiles }: St
         <div><strong>{auditedProfiles} audited profiles</strong><span>Manually reviewed endpoints</span></div>
       </div>
       <div className="stats-bento-small availability">
-        <strong className="unavailable">Not available</strong>
-        <span className="stats-bento-label">Verified hires</span>
+        <strong className="standard">ERC-8004</strong>
+        <span className="stats-bento-label">Registry standard</span>
       </div>
     </section>
   );

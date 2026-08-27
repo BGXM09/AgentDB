@@ -1,9 +1,9 @@
 :root {
-  --blue: #000;
-  --blue-dark: #000;
-  --link: #000;
-  --hero-blue: #000;
-  --text: #0a0a0a;
+  --blue: #121212;
+  --blue-dark: #121212;
+  --link: #121212;
+  --hero-blue: #121212;
+  --text: #121212;
   --muted: #686868;
   --line: #d8d8d8;
   --surface: #fff;
@@ -1554,7 +1554,9 @@ input:focus-visible {
 /* White mono system */
 body {
   background: #fff;
-  color: #0a0a0a;
+  color: #121212;
+  font-family: "Archivo Variable", sans-serif;
+  font-weight: 570;
 }
 .site-header {
   background: #fff;
@@ -1596,7 +1598,7 @@ body {
   color: #fff;
 }
 .hero-band {
-  background: #000;
+  background: #121212;
   background-image: none;
 }
 .hero-band:after {
@@ -1639,7 +1641,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   padding: 32px;
-  background: #050505;
+  background: #121212;
   color: #fff;
 }
 .stats-bento-shapes {
@@ -1663,7 +1665,7 @@ body {
 .stats-bento-label {
   display: block;
   color: #686868;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 780;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1677,7 +1679,7 @@ body {
 }
 .stats-bento-primary h2 {
   margin: 15px 0 0;
-  font-size: 52px;
+  font-size: 58px;
   font-weight: 820;
   line-height: 1;
   letter-spacing: -2.6px;
@@ -1686,7 +1688,9 @@ body {
   max-width: 310px;
   margin: 0;
   color: #aaa;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 560;
+  line-height: 1.5;
 }
 .stats-bento-wide {
   grid-column: span 3;
@@ -1699,7 +1703,7 @@ body {
 .stats-bento-wide strong {
   display: block;
   margin-top: 5px;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 780;
   letter-spacing: -0.7px;
 }
@@ -1707,7 +1711,8 @@ body {
   display: block;
   margin-top: 4px;
   color: #777;
-  font-size: 9px;
+  font-size: 11px;
+  font-weight: 560;
 }
 .registry-bars {
   display: flex;
@@ -1720,7 +1725,7 @@ body {
   flex: 1;
   min-width: 5px;
   border-radius: 999px;
-  background: #0a0a0a;
+  background: #121212;
 }
 .stats-bento-small {
   grid-column: span 1;
@@ -1732,13 +1737,13 @@ body {
   background: #fff;
 }
 .stats-bento-small strong {
-  font-size: 27px;
+  font-size: 32px;
   font-weight: 790;
   line-height: 1;
 }
-.stats-bento-small strong.unavailable {
-  font-size: 12px;
-  letter-spacing: -0.1px;
+.stats-bento-small strong.standard {
+  font-size: 15px;
+  letter-spacing: -0.35px;
 }
 .stats-bento-small .stats-bento-label {
   margin-top: 7px;
@@ -1764,14 +1769,14 @@ body {
 }
 .stats-bento-medium strong {
   display: block;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 760;
 }
 .stats-bento-medium div span {
   display: block;
   margin-top: 3px;
   color: #737373;
-  font-size: 10px;
+  font-size: 12px;
 }
 .stats-bento-small.availability {
   background: #f8f8f8;
@@ -1834,6 +1839,7 @@ body {
 .feed-row b,
 .category-tile b {
   font-weight: 740;
+  font-size: 14px;
 }
 .section-heading p,
 .feed-row small,
@@ -1845,6 +1851,17 @@ dt,
 .entity-header p,
 .page-heading p {
   color: #686868;
+}
+.feed-row small,
+.feed-meta {
+  font-size: 11px;
+}
+.category-tile b {
+  font-size: 16px;
+}
+.category-tile small {
+  font-size: 12px;
+  line-height: 1.45;
 }
 .feed-icon,
 .category-glyph,
@@ -1949,7 +1966,7 @@ footer {
 }
 .footer-brand,
 .footer-grid b {
-  color: #111;
+  color: #121212;
 }
 .footer-top a,
 .footer-grid a {
@@ -2047,9 +2064,12 @@ input:focus-visible {
   display: flex;
   width: auto;
   min-width: 112px;
+  height: auto;
+  margin: 6px;
   gap: 8px;
   padding: 0 18px;
-  background: #050505;
+  border-radius: 10px;
+  background: #121212;
   color: #fff;
 }
 .universal-search:not(.compact) .search-label {
