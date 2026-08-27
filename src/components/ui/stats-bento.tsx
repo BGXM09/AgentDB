@@ -5,6 +5,13 @@ interface StatsBentoProps {
   indexedAgents: number;
 }
 
+const categoryArt: Record<string, string> = {
+  rebalancing: "╭──────╮\n│  ↗ ↘ │\n╰──┬───╯\n   └──→",
+  "grid-trading": "┌─┬─┬─┐\n├─┼●┼─┤\n├●┼─┼●┤\n└─┴─┴─┘",
+  "yield-optimisation": "      ╱╲\n   ╱╲╱  ╲\n ╱╲  ╱  ↗\n╱__╲╱____╲",
+  "health-factor-monitoring": "╭────────╮\n│ ─╲╱╲── │\n│     ╲╱ │\n╰────────╯",
+};
+
 export const StatsBento = ({ indexedAgents }: StatsBentoProps) => {
   return (
     <section className="stats-bento" aria-label="Explore AgentDB">
@@ -21,6 +28,7 @@ export const StatsBento = ({ indexedAgents }: StatsBentoProps) => {
 
       {categories.map((category) => (
         <Link className="stats-bento-category" href={`/categories/${category.slug}`} key={category.slug}>
+          <pre className="category-ascii" aria-hidden="true">{categoryArt[category.slug]}</pre>
           <span className="stats-bento-label">Agent category</span>
           <strong>{category.name}</strong>
           <span className="category-action">Browse agents <span aria-hidden="true">→</span></span>
