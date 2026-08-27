@@ -4,9 +4,11 @@ import { BackgroundShapes } from "./background-shapes";
 
 interface StatsBentoProps {
   indexedAgents: number;
+  categoryCount: number;
+  auditedProfiles: number;
 }
 
-export const StatsBento = ({ indexedAgents }: StatsBentoProps) => {
+export const StatsBento = ({ indexedAgents, categoryCount, auditedProfiles }: StatsBentoProps) => {
   return (
     <section className="stats-bento" aria-label="AgentDB registry statistics">
       <div className="stats-bento-primary">
@@ -36,12 +38,12 @@ export const StatsBento = ({ indexedAgents }: StatsBentoProps) => {
         </div>
       </div>
       <div className="stats-bento-small">
-        <strong>56</strong>
-        <span className="stats-bento-label">Chain ID</span>
+        <strong>{categoryCount}</strong>
+        <span className="stats-bento-label">Curated categories</span>
       </div>
       <div className="stats-bento-medium">
-        <span className="stats-bento-mark" aria-hidden="true">B</span>
-        <div><strong>BNB Mainnet</strong><span>Active network</span></div>
+        <span className="stats-bento-mark" aria-hidden="true">✓</span>
+        <div><strong>{auditedProfiles} audited profiles</strong><span>Manually reviewed endpoints</span></div>
       </div>
       <div className="stats-bento-small availability">
         <strong className="unavailable">Not available</strong>
