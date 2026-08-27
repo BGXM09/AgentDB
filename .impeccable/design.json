@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-27T15:26:48Z",
+  "title": "Design System: AgentDB",
+  "extensions": {
+    "colorMeta": {
+      "registry-cyan": {
+        "role": "primary",
+        "displayName": "Registry Cyan",
+        "tonalRamp": ["#002633", "#00455e", "#006a8f", "#008fc1", "#00a9e8", "#48c6ef", "#9ee4f8", "#e6f9fe"]
+      },
+      "evidence-link": {
+        "role": "primary",
+        "displayName": "Evidence Link",
+        "tonalRamp": ["#002330", "#004158", "#006180", "#0082ab", "#008fc9", "#49b9df", "#9bdcef", "#e6f6fb"]
+      },
+      "signal-lime": {
+        "role": "secondary",
+        "displayName": "Signal Lime",
+        "tonalRamp": ["#243300", "#405900", "#638600", "#88b817", "#b8f34a", "#cff978", "#e4fbae", "#f7fee8"]
+      },
+      "registry-navy": {
+        "role": "neutral",
+        "displayName": "Registry Navy",
+        "tonalRamp": ["#061a2c", "#0b2d49", "#174565", "#315f7f", "#587e9b", "#87a5bb", "#bed0dc", "#eef4f7"]
+      },
+      "registry-navy-raised": {
+        "role": "neutral",
+        "displayName": "Registry Navy Raised",
+        "tonalRamp": ["#081b2b", "#0a233a", "#183e5c", "#315a78", "#587a95", "#86a3b8", "#bdcfd9", "#eef4f6"]
+      },
+      "deep-navy": {
+        "role": "neutral",
+        "displayName": "Deep Navy",
+        "tonalRamp": ["#071a2c", "#0c2d48", "#19445f", "#335f7a", "#5a8098", "#88a6b9", "#bfd0da", "#eef4f7"]
+      },
+      "evidence-ink": {
+        "role": "neutral",
+        "displayName": "Evidence Ink",
+        "tonalRamp": ["#0b1826", "#102338", "#29415a", "#486078", "#6e8397", "#9badbb", "#cbd5dc", "#f2f5f7"]
+      },
+      "secondary-ink": {
+        "role": "neutral",
+        "displayName": "Secondary Ink",
+        "tonalRamp": ["#17202b", "#2b3947", "#45566a", "#617286", "#7f90a1", "#a3b0bd", "#cbd3db", "#f2f4f6"]
+      },
+      "evidence-line": {
+        "role": "neutral",
+        "displayName": "Evidence Line",
+        "tonalRamp": ["#1d252b", "#37434c", "#596771", "#7d8c97", "#a4b0b9", "#c2cbd1", "#dbe3ea", "#f5f7f9"]
+      },
+      "evidence-surface": {
+        "role": "neutral",
+        "displayName": "Evidence Surface",
+        "tonalRamp": ["#262626", "#474747", "#6b6b6b", "#919191", "#b8b8b8", "#d6d6d6", "#ededed", "#ffffff"]
+      },
+      "evidence-canvas": {
+        "role": "neutral",
+        "displayName": "Evidence Canvas",
+        "tonalRamp": ["#222629", "#41484d", "#636d74", "#87939a", "#adb7bd", "#cdd4d8", "#e4e9ec", "#f3f6f8"]
+      },
+      "verified-teal": {
+        "role": "tertiary",
+        "displayName": "Verified Teal",
+        "tonalRamp": ["#003029", "#005247", "#007563", "#00957c", "#00a186", "#48c3ab", "#9be1d1", "#e5f8f3"]
+      },
+      "caution-amber": {
+        "role": "tertiary",
+        "displayName": "Caution Amber",
+        "tonalRamp": ["#352300", "#5d3d00", "#875a00", "#ad7600", "#c98900", "#e5b448", "#f2d799", "#fff5df"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Homepage hero statement." },
+      "headline": { "displayName": "Headline", "purpose": "Page and entity titles." },
+      "title": { "displayName": "Title", "purpose": "Panel and section headings." },
+      "body": { "displayName": "Body", "purpose": "Default application copy and data." },
+      "label": { "displayName": "Telemetry Label", "purpose": "Uppercase metrics and compact statuses." }
+    },
+    "shadows": [
+      { "name": "header-lift", "value": "0 4px 18px rgba(5, 28, 49, 0.07)", "purpose": "Separates global navigation from the page." },
+      { "name": "search-focus-plane", "value": "0 12px 30px rgba(0, 0, 0, 0.28)", "purpose": "Anchors the main search against the navy hero." },
+      { "name": "summary-bridge", "value": "0 18px 45px rgba(7, 31, 53, 0.13)", "purpose": "Supports the hero-to-content overlap." },
+      { "name": "evidence-rest", "value": "0 7px 22px rgba(10, 35, 55, 0.055)", "purpose": "Gives evidence panels quiet separation." },
+      { "name": "category-hover", "value": "0 8px 20px rgba(7, 60, 84, 0.08)", "purpose": "Confirms category-tile interaction." }
+    ],
+    "motion": [
+      { "name": "signal-pulse", "value": "2.8s ease-out infinite", "purpose": "The single repeating live-signal pulse; disabled under prefers-reduced-motion." },
+      { "name": "category-hover-shift", "value": "translateY(-2px)", "purpose": "Small spatial confirmation on category hover." },
+      { "name": "smooth-scroll", "value": "smooth", "purpose": "Default in-page navigation; disabled under prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "compact", "value": "850px" },
+      { "name": "narrow", "value": "560px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Compact cyan action for explicit explorer operations.",
+      "html": "<button class=\"ds-btn-primary\">OPEN EXPLORER</button>",
+      "css": ".ds-btn-primary { border: 0; border-radius: 8px; background: var(--blue); color: var(--surface); padding: 10px 13px; font-family: 'Manrope Variable', sans-serif; font-size: 12px; font-weight: 750; cursor: pointer; } .ds-btn-primary:hover { background: var(--link); } .ds-btn-primary:focus-visible { outline: 3px solid rgba(0, 169, 232, 0.28); outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Wallet Action",
+      "kind": "button",
+      "refersTo": "button-wallet",
+      "description": "Pale-cyan secondary action retained in the shared header.",
+      "html": "<button class=\"ds-btn-wallet\">Connect Wallet</button>",
+      "css": ".ds-btn-wallet { min-height: 39px; border: 1px solid #b9e6f5; border-radius: 6px; background: #eafaff; color: #007cae; padding: 9px 14px; font-family: 'Manrope Variable', sans-serif; font-size: 12px; font-weight: 750; cursor: pointer; } .ds-btn-wallet:hover { border-color: #98d8ef; background: #eefaff; } .ds-btn-wallet:focus-visible { outline: 3px solid rgba(0, 169, 232, 0.25); outline-offset: 2px; } .ds-btn-wallet:active { background: #dcf5fd; }"
+    },
+    {
+      "name": "Hero Search",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "The dominant cross-entity search control on the live-signal hero.",
+      "html": "<form class=\"ds-search\"><label class=\"ds-search-label\" for=\"ds-q\">Search agents</label><input id=\"ds-q\" placeholder=\"Search by agent, ERC-8004 ID, address, capability or protocol\"><button aria-label=\"Search\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"6.5\"/><path d=\"m16 16 4 4\"/></svg></button></form>",
+      "css": ".ds-search { max-width: 880px; min-height: 58px; display: flex; border: 1px solid rgba(255,255,255,.18); border-radius: 10px; background: var(--surface); box-shadow: 0 12px 30px rgba(0,0,0,.28); } .ds-search-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; } .ds-search input { min-width: 0; flex: 1; border: 0; border-radius: 10px 0 0 10px; padding: 15px 19px; color: #16293d; font-family: 'Manrope Variable', sans-serif; font-size: 14px; font-weight: 550; outline: none; } .ds-search input::placeholder { color: #66788a; opacity: 1; } .ds-search:focus-within { box-shadow: 0 0 0 3px rgba(0,169,232,.28), 0 12px 30px rgba(0,0,0,.28); } .ds-search button { width: 44px; min-width: 44px; height: 44px; margin: 6px; border: 0; border-radius: 8px; background: #009ed7; color: #fff; cursor: pointer; } .ds-search button:hover { background: #007eae; } .ds-search button:focus-visible { outline: 3px solid rgba(184,243,74,.55); outline-offset: 2px; } .ds-search svg { width: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; }"
+    },
+    {
+      "name": "Primary Navigation",
+      "kind": "nav",
+      "description": "Compact white explorer navigation with cyan active evidence.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-active\" href=\"#\">Home</a><a href=\"#\">Agents</a><a href=\"#\">Tasks</a><a href=\"#\">Activity</a></nav>",
+      "css": ".ds-nav { height: 74px; display: flex; align-items: center; background: var(--surface); font-family: 'Manrope Variable', sans-serif; } .ds-nav a { height: 74px; display: inline-flex; align-items: center; padding: 0 16px; color: #25394c; font-size: 13px; font-weight: 650; text-decoration: none; } .ds-nav a:hover, .ds-nav .ds-nav-active { color: var(--link); } .ds-nav a:focus-visible { outline: 3px solid rgba(0,169,232,.25); outline-offset: -4px; } .ds-nav a:active { background: #eefaff; }"
+    },
+    {
+      "name": "Information Status",
+      "kind": "chip",
+      "refersTo": "chip-status",
+      "description": "Compact factual state label for registrations and evidence.",
+      "html": "<span class=\"ds-status-info\">Registration</span>",
+      "css": ".ds-status-info { display: inline-block; padding: 3px 7px; border-radius: 4px; background: #e9f5fc; color: #0873ae; font-family: 'Manrope Variable', sans-serif; font-size: 10px; font-weight: 750; white-space: nowrap; }"
+    },
+    {
+      "name": "Evidence Panel",
+      "kind": "card",
+      "refersTo": "card-evidence",
+      "description": "Canonical white container for dense, inspectable registry data.",
+      "html": "<section class=\"ds-panel\"><header><h3>Latest Agents</h3><a href=\"#\">View all agents</a></header><div class=\"ds-panel-row\"><span class=\"ds-panel-icon\">A</span><span><strong>Registry Agent</strong><small>Agent #8004</small></span><time>2m ago</time></div><a class=\"ds-panel-footer\" href=\"#\">View all agents →</a></section>",
+      "css": ".ds-panel { overflow: hidden; border: 1px solid #dce4e9; border-radius: 14px; background: var(--surface); color: var(--text); box-shadow: 0 7px 22px rgba(10,35,55,.055); font-family: 'Manrope Variable', sans-serif; } .ds-panel header { min-height: 62px; display: flex; align-items: center; justify-content: space-between; padding: 17px 20px; border-bottom: 1px solid var(--line); } .ds-panel h3 { margin: 0; font-size: 16px; font-weight: 800; letter-spacing: -.15px; } .ds-panel a { color: #377086; font-size: 11px; font-weight: 700; text-decoration: none; } .ds-panel a:hover { color: var(--link); text-decoration: underline; } .ds-panel a:focus-visible { outline: 3px solid rgba(0,169,232,.25); outline-offset: 2px; } .ds-panel-row { min-height: 78px; display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 12px; align-items: center; padding: 13px 19px; border-bottom: 1px solid var(--line); } .ds-panel-icon { width: 39px; height: 39px; display: grid; place-items: center; border: 1px solid #d8e5ea; border-radius: 50%; background: #f4f8fa; color: #0a8fc2; font-weight: 800; } .ds-panel strong, .ds-panel small { display: block; } .ds-panel strong { font-size: 12px; font-weight: 750; } .ds-panel small, .ds-panel time { color: var(--muted); font-size: 10px; font-weight: 550; } .ds-panel-footer { display: block; padding: 14px; background: #f8fafb; text-align: center; }"
+    },
+    {
+      "name": "Category Tile",
+      "kind": "card",
+      "description": "Compact discovery tile combining a signal glyph, category copy, and directional affordance.",
+      "html": "<a class=\"ds-category\" href=\"#\"><span class=\"ds-category-glyph\"></span><span><strong>Grid Trading</strong><small>Agents indexed by capability</small></span><svg viewBox=\"0 0 18 18\" aria-hidden=\"true\"><path d=\"M3 9h11M10 5l4 4-4 4\"/></svg></a>",
+      "css": ".ds-category { min-height: 82px; display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 12px; align-items: center; padding: 14px; border: 1px solid #dce4e9; border-radius: 12px; background: var(--surface); color: var(--text); font-family: 'Manrope Variable', sans-serif; text-decoration: none; } .ds-category:hover { border-color: #91d5eb; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(7,60,84,.08); } .ds-category:focus-visible { outline: 3px solid rgba(0,169,232,.25); outline-offset: 2px; } .ds-category:active { transform: translateY(0); } .ds-category-glyph { position: relative; width: 38px; height: 38px; border: 1px solid #cae9f3; border-radius: 50%; background: #effafe; } .ds-category-glyph:before { content: ''; position: absolute; width: 13px; height: 13px; left: 10px; top: 10px; border: 2px solid var(--link); border-radius: 50%; } .ds-category-glyph:after { content: ''; position: absolute; width: 4px; height: 4px; right: 7px; top: 7px; border: 2px solid #fff; border-radius: 50%; background: var(--signal); } .ds-category strong, .ds-category small { display: block; } .ds-category strong { font-size: 12px; font-weight: 800; } .ds-category small { color: var(--muted); font-size: 10px; font-weight: 550; } .ds-category svg { width: 16px; fill: none; stroke: var(--link); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Deep-Signal Registry",
+    "overview": "AgentDB is an Operate-mode explorer: serious, compact, and evidence-first. Its visual world pairs a dark navy live-signal field with crisp white registry surfaces, making onchain records feel active without turning the interface into a trading dashboard. Cyan marks navigation and inspectable evidence; acid lime is reserved for live or verified signal moments.\n\nThe structure inherits the useful density of a block explorer, but its identity comes from sonar rings, telemetry traces, compact signal glyphs, and a database-node mark. The Etherscan reference informs information architecture only. The implemented system does not copy its brand, palette, or visual mannerisms.",
+    "keyCharacteristics": [
+      "High-density evidence surfaces on a cool, quiet canvas.",
+      "Dark navy live-signal fields paired with crisp white registry cards.",
+      "Cyan for navigation and inspectable evidence; acid lime for rare live or verification signals.",
+      "Locally bundled Manrope Variable, used at weights 500–800 for legibility and authority.",
+      "Sonar, telemetry, and node geometry expressed through CSS and inline SVG.",
+      "One restrained pulse with a reduced-motion fallback."
+    ],
+    "rules": [
+      { "name": "The Scarce Signal Rule", "body": "Acid lime marks an actual live or verification cue; it is never a general-purpose fill, link color, or decorative wash.", "section": "colors" },
+      { "name": "The Evidence Contrast Rule", "body": "Dense records live on white or near-white surfaces with dark ink; navy is reserved for framing, orientation, and the live-signal hero.", "section": "colors" },
+      { "name": "The Compact Authority Rule", "body": "Create hierarchy with weight, tracking, and surface placement before increasing type size.", "section": "typography" },
+      { "name": "The Evidence-First Density Rule", "body": "Keep rows and cards compact enough to compare records, but preserve clear group boundaries and stable alignment for names, metadata, status, and timestamps.", "section": "layout" },
+      { "name": "The Structural Shadow Rule", "body": "Shadows explain stacking or interaction; they do not decorate every container.", "section": "elevation" },
+      { "name": "The Semantic Geometry Rule", "body": "Circles mean agents, nodes, or live signal; rounded rectangles mean tasks, controls, or bounded evidence.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do present real agent, registration, task, network, and verification data; use explicit unavailable and empty states when evidence is absent.",
+      "Do use cyan for inspectable evidence and acid lime only for a live or verified signal.",
+      "Do keep shared screens inside the 1240px container and preserve compact, aligned evidence rows.",
+      "Do use the locally bundled Manrope Variable family at weights 500–800.",
+      "Do preserve reduced-motion behavior for the single signal pulse."
+    ],
+    "donts": [
+      "Don't fabricate counts, prices, task history, hireability, or trust claims to make a surface feel complete.",
+      "Don't turn the interface into a neon trading terminal or cover white evidence surfaces with dark panels.",
+      "Don't add additional looping animations, ambient particle fields, or competing pulses.",
+      "Don't copy Etherscan's brand identity; use it only as structural evidence for explorer density and information architecture.",
+      "Don't substitute generic icon-library glyphs for the established database-node, sonar, activity, task, and arrow grammar."
+    ]
+  }
+}
