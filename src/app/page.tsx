@@ -7,6 +7,7 @@ import { relativeDate, short } from "@/lib/format";
 import { listBscAgents } from "@/lib/scan8004/client";
 import { BackgroundShapes } from "@/components/ui/background-shapes";
 import { ExplorerIcon } from "@/components/explorer-icon";
+import { StatsBento } from "@/components/ui/stats-bento";
 
 export const dynamic = "force-dynamic";
 
@@ -16,10 +17,7 @@ export default async function Home() {
   return <main>
     <section className="hero-band"><BackgroundShapes className="hero-shapes" colors={["white"]}/><div className="container"><h1>The BNB Agent Economy Explorer</h1><SearchBox /></div></section>
     <div className="container overlap">
-      <section className="stats-card registry-overview">
-        <div className="registry-primary"><span className="metric-icon"><ExplorerIcon type="agent" /></span><div><p>INDEXED BSC AGENTS</p><b>{page.total.toLocaleString()}</b><small>Live ERC-8004 identity index</small></div></div>
-        <div className="overview-facts"><div><p>NETWORK</p><b>BNB Mainnet</b></div><div><p>VERIFIED TASKS</p><b>Not available</b></div><div><p>VERIFIED HIRES</p><b>Not available</b></div></div>
-      </section>
+      <StatsBento indexedAgents={page.total} />
       <section className="split-panels">
         <div className="panel"><div className="panel-title"><h2>Latest Agents</h2><Link href="/agents">View all agents</Link></div><div className="feed-list">{agents.slice(0, 6).map((agent) => <div className="feed-row" key={agent.id}><span className="feed-icon"><ExplorerIcon type="agent" /></span><div><Link href={`/agents/${agent.token_id}`}><b>{agent.name}</b></Link><small>Agent #{agent.token_id}</small></div><div className="feed-meta"><span>{relativeDate(agent.created_at)}</span><code>{short(agent.owner_address)}</code></div></div>)}</div><Link className="panel-footer" href="/agents">View all agents <ExplorerIcon type="arrow" /></Link></div>
         <div className="panel"><div className="panel-title"><h2>Latest Tasks / Activity</h2><Link href="/activity">View activity</Link></div><div className="feed-list">{agents.slice(0, 5).map((agent) => <div className="feed-row" key={agent.id}><span className="feed-icon tx"><ExplorerIcon type="activity" /></span><div><Link href={`/agents/${agent.token_id}`}><b>Agent #{agent.token_id} registered</b></Link><small>Confirmed ERC-8004 registration</small></div><div className="feed-meta"><span>{relativeDate(agent.created_at)}</span><StatusBadge tone="info">Registration</StatusBadge></div></div>)}<div className="feed-row empty-row"><span className="feed-icon tx"><ExplorerIcon type="task" /></span><div><b>No verified task data available</b><small>Task activity appears only after a verified mediated job.</small></div></div></div><Link className="panel-footer" href="/tasks">Open Task Explorer <ExplorerIcon type="arrow" /></Link></div>
