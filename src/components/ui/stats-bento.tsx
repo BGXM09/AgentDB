@@ -6,10 +6,10 @@ interface StatsBentoProps {
 }
 
 const categoryArt: Record<string, string> = {
-  rebalancing: "  ↗━━━━↘\n◢        ◣\n┃   ⇄    ┃\n◥        ◤\n  ↖━━━━↙",
+  rebalancing: "      ╷\n  ╭───┼───╮\n ╱    │    ╲\n◯     │     ◯\n      ╧",
   "grid-trading": "╱╲╱╲╱╲╱╲\n╲╱◆╲╱◆╲╱\n╱◆╲╱◆╲╱◆\n╲╱◆╲╱◆╲╱",
   "yield-optimisation": "          ▄\n       ▃██\n    ▂█████\n ▁████████ ↗",
-  "health-factor-monitoring": "━━━━╮  ╭━━\n    ╰╮╭╯\n     ╰╯\n━━╮      ╭━\n  ╰━━━━━━╯",
+  "health-factor-monitoring": "╭──────────╮\n│ ──╲╱╲──  │\n│ BPM  72  │\n╰──────────╯",
 };
 
 export const StatsBento = ({ indexedAgents }: StatsBentoProps) => {
