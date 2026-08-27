@@ -11,18 +11,8 @@ export function SiteHeader() {
         </Link>
         <nav>
           <Link href="/">Home</Link>
-          <Link href="/agents">
-            Agents{" "}
-            <svg className="nav-caret" viewBox="0 0 10 6" aria-hidden="true">
-              <path d="m1 1 4 4 4-4" />
-            </svg>
-          </Link>
-          <Link href="/tasks">
-            Tasks{" "}
-            <svg className="nav-caret" viewBox="0 0 10 6" aria-hidden="true">
-              <path d="m1 1 4 4 4-4" />
-            </svg>
-          </Link>
+          <Link href="/agents">Agents</Link>
+          <Link href="/tasks">Tasks</Link>
           <Link href="/activity">Activity</Link>
           <Link href="/leaderboard">Leaderboard</Link>
         </nav>

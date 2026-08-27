@@ -7,6 +7,7 @@ import { calculateAgentDbScore } from "@/lib/agents/score";
 import { absoluteDate, short } from "@/lib/format";
 import { getBscAgent } from "@/lib/scan8004/client";
 import { getVerifiedClaim } from "@/lib/supabase/claims";
+import { ExplorerIcon } from "@/components/explorer-icon";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,7 @@ export default async function AgentDetailPage({ params }: { params: Promise<{ id
   const txHash = typeof agent.created_tx_hash === "string" ? agent.created_tx_hash : null;
   const claim = await getVerifiedClaim(id, agent.contract_address);
   return <main className="container page-content"><div className="breadcrumb"><Link href="/">Home</Link><span>/</span><Link href="/agents">Agents</Link><span>/</span>Agent #{id}</div>
-    <section className="entity-header"><div className="entity-ident"><span className="large-agent-icon">A</span><div><div className="title-line"><h1>{agent.name || `Agent #${id}`}</h1>{agent.is_verified && <StatusBadge tone="success">Verified identity</StatusBadge>}</div><p>ERC-8004 Agent #{id} <button className="copy" title="Copy ID">Copy</button></p></div></div><div className="entity-actions"><Link className="secondary-action" href={`/agents/${id}/claim`}>Claim Agent</Link>{id === "265375" ? <Link className="primary-action" href={`/agents/${id}/hire`}>Hire Agent</Link> : <button className="hire-disabled" disabled>Hire Agent</button>}</div></section>
+    <section className="entity-header"><div className="entity-ident"><span className="large-agent-icon"><ExplorerIcon type="agent" /></span><div><div className="title-line"><h1>{agent.name || `Agent #${id}`}</h1>{agent.is_verified && <StatusBadge tone="success">Verified identity</StatusBadge>}</div><p>Agent #{id} <button className="copy" title="Copy ID">Copy</button></p></div></div><div className="entity-actions"><Link className="secondary-action" href={`/agents/${id}/claim`}>Claim Agent</Link>{id === "265375" ? <Link className="primary-action" href={`/agents/${id}/hire`}>Hire Agent</Link> : <button className="hire-disabled" disabled>Hire Agent</button>}</div></section>
     {claim && <div className="notice success-notice"><b>Claimed owner ✓</b> AgentDB verified the canonical owner wallet onchain and recorded a signed ownership proof on {absoluteDate(claim.verified_at)}.</div>}
     {audit && <div className={`notice ${audit.tone === "success" ? "success-notice" : "warning-notice"}`}><b>{audit.label}.</b> {audit.note}</div>}
     {!audit && <div className="notice warning-notice"><b>No verified hiring interface detected.</b> Registration alone does not establish hireability.</div>}
