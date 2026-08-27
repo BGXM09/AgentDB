@@ -1750,7 +1750,9 @@ body {
     linear-gradient(90deg, rgba(18, 18, 18, 0.48), transparent 68%);
   pointer-events: none;
 }
-.stats-bento-primary > :not(.bento-ascii):not(.bento-ascii-veil) {
+.stats-bento-primary > .stats-bento-label,
+.stats-bento-primary > h2,
+.stats-bento-primary > strong {
   position: relative;
   z-index: 1;
 }
@@ -2325,8 +2327,8 @@ input:focus-visible {
   font-weight: 680;
 }
 .universal-search:not(.compact) button {
-  width: 54px;
-  min-width: 54px;
+  width: 126px;
+  min-width: 126px;
   padding: 5px;
   border-radius: 999px;
   justify-content: center;
