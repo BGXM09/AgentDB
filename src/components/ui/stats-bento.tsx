@@ -23,7 +23,6 @@ export const StatsBento = ({ indexedAgents }: StatsBentoProps) => {
         <span className="stats-bento-label inverted">Browse all agents</span>
         <h2>{indexedAgents.toLocaleString()}</h2>
         <strong>Indexed agents</strong>
-        <span className="bento-arrow" aria-hidden="true">↗</span>
       </Link>
 
       {categories.map((category) => (
@@ -31,7 +30,6 @@ export const StatsBento = ({ indexedAgents }: StatsBentoProps) => {
           <img className={`category-image category-image-${category.slug}`} src={categoryArt[category.slug]} alt="" aria-hidden="true" />
           <span className="stats-bento-label">Agent category</span>
           <strong>{category.name}</strong>
-          <span className="category-action">Browse agents <span aria-hidden="true">→</span></span>
         </Link>
       ))}
     </section>

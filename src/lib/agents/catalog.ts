@@ -1,10 +1,10 @@
 import type { AgentCategory } from "./types";
 
-export const categories: Array<{ slug: string; name: AgentCategory; query: string; description: string; auditedIds: string[] }> = [
-  { slug: "rebalancing", name: "Rebalancing", query: "LP rebalancing liquidity range", description: "Manage LP ranges and reset positions when supported by the agent.", auditedIds: ["265375", "293054", "45650"] },
-  { slug: "grid-trading", name: "Grid Trading", query: "grid trading", description: "Plan or manage automated grid orders using declared agent services.", auditedIds: ["292939", "266234", "302258", "267697"] },
-  { slug: "yield-optimisation", name: "Yield Optimisation", query: "yield optimisation highest APR", description: "Discover or route liquidity toward yield opportunities.", auditedIds: ["267698", "3416", "133221", "302258"] },
-  { slug: "health-factor-monitoring", name: "Health Factor Monitoring", query: "health factor monitoring liquidation protection", description: "Monitor lending risk and liquidation distance.", auditedIds: ["292058", "179543", "302258"] },
+export const categories: Array<{ slug: string; name: AgentCategory; queries: string[]; description: string; auditedIds: string[] }> = [
+  { slug: "rebalancing", name: "Rebalancing", queries: ["portfolio rebalancing and asset allocation", "LP liquidity range management", "automated DeFi portfolio management", "concentrated liquidity positions"], description: "Manage LP ranges and reset positions when supported by the agent.", auditedIds: ["265375", "293054", "45650"] },
+  { slug: "grid-trading", name: "Grid Trading", queries: ["grid trading and limit orders", "automated crypto trading bot", "algorithmic market making", "DEX trading automation"], description: "Plan or manage automated grid orders using declared agent services.", auditedIds: ["292939", "266234", "302258", "267697"] },
+  { slug: "yield-optimisation", name: "Yield Optimisation", queries: ["DeFi yield optimisation and farming", "staking and liquidity rewards", "vault APY opportunities", "lending yield and passive returns"], description: "Discover or route liquidity toward yield opportunities.", auditedIds: ["267698", "3416", "133221", "302258"] },
+  { slug: "health-factor-monitoring", name: "Health Factor Monitoring", queries: ["DeFi position risk monitoring", "lending liquidation alerts", "collateral and leverage risk", "loan health monitoring"], description: "Monitor lending risk and liquidation distance.", auditedIds: ["292058", "179543", "302258"] },
 ];
 
 export const auditedAgentIds = ["265375", "293054", "45650", "292939", "266234", "302258", "267697", "267698", "3416", "133221", "292058", "179543"];

@@ -20,7 +20,7 @@ export function AgentTable({ agents, showCategory = true, hideAgentId = false, i
 
       return <Link className={`agent-registry-card${imageLed ? " image-led-agent-card" : ""}`} href={`/agents/${agent.token_id}`} key={agent.id}>
         {imageLed && normalized.canonical.imageUrl && <AgentAvatar imageUrl={normalized.canonical.imageUrl} name={displayName} artwork />}
-        <div className="agent-card-top">{!hideAgentId && <span className="agent-card-id">#{agent.token_id}</span>}<span className="agent-card-arrow" aria-hidden="true">↗</span></div>
+        {!hideAgentId && <div className="agent-card-top"><span className="agent-card-id">#{agent.token_id}</span></div>}
         <div className="agent-card-identity"><AgentAvatar imageUrl={normalized.canonical.imageUrl} name={displayName} /><div><strong>{displayName}</strong><code>{short(agent.owner_address)}</code></div></div>
         <div className="agent-card-facts">
           {showCategory && <div><span>Category</span><b>{category}</b></div>}
