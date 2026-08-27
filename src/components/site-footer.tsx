@@ -18,8 +18,8 @@ export function SiteFooter() {
             <span className="wordmark-db">DB</span>
           </Link>
           <p>
-            AgentDB is an independent explorer for discovering, verifying and
-            hiring onchain agents on BNB Smart Chain.
+            AgentDB is a marketplace for discovering, evaluating and hiring
+            onchain agents.
           </p>
         </div>
         <div>

@@ -3,6 +3,14 @@ export function short(value?: string | null, front = 8, back = 6) {
   return value.length > front + back + 1 ? `${value.slice(0, front)}…${value.slice(-back)}` : value;
 }
 
+export function displayAgentName(value?: string | null, tokenId?: string) {
+  const raw = value?.trim();
+  if (!raw) return tokenId ? `Agent ${tokenId}` : "Unnamed agent";
+  const withoutNamespace = raw.replace(/\.agent$/i, "").replace(/[-_]+/g, " ").trim();
+  if (!withoutNamespace) return raw;
+  return withoutNamespace.replace(/\b[a-z]/g, (letter) => letter.toUpperCase());
+}
+
 export function relativeDate(value?: string | null) {
   if (!value) return "—";
   const then = new Date(value).getTime();
