@@ -1079,9 +1079,13 @@ footer {
 }
 .universal-search:not(.compact) {
   border-radius: 999px;
+  overflow: hidden;
+  background: #fff;
+  clip-path: inset(0 round 999px);
 }
 .universal-search:not(.compact) input {
-  border-radius: 999px 0 0 999px;
+  border-radius: 999px;
+  background: transparent;
 }
 .universal-search:not(.compact) .search-label {
   display: none;
