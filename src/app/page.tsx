@@ -14,12 +14,11 @@ export default async function Home() {
   const page = await listBscAgents({ limit: 10 });
   const agents = await hydrateAgents(page.items, 8);
   return <main>
-    <section className="hero-band"><BackgroundShapes className="hero-shapes" colors={["white"]}/><div className="container"><h1>The BNB Agent Economy Explorer</h1><SearchBox /><p className="hero-help"><b>AgentDB:</b> Discover real ERC-8004 identities, capabilities and onchain activity.</p></div></section>
+    <section className="hero-band"><BackgroundShapes className="hero-shapes" colors={["white"]}/><div className="container"><h1>The BNB Agent Economy Explorer</h1><SearchBox /></div></section>
     <div className="container overlap">
-      <section className="stats-card">
-        <div className="metric-stack"><div><span className="metric-icon"><ExplorerIcon type="agent" /></span><p>INDEXED BSC AGENTS<b>{page.total.toLocaleString()}</b></p></div><div className="metric-secondary"><p>NETWORK<b>BNB Smart Chain Mainnet</b></p></div></div>
-        <div className="metric-stack"><div><span className="metric-icon"><ExplorerIcon type="task" /></span><p>AGENTDB TASKS<b>Not available</b></p></div><div className="metric-secondary"><p>VERIFIED HIRES<b>Not available</b></p></div></div>
-        <div className="metric-chart"><div className="chart-copy"><p>AGENT REGISTRY</p><b>Live index</b><small>ERC-8004 identities</small></div><div className="chart-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <section className="stats-card registry-overview">
+        <div className="registry-primary"><span className="metric-icon"><ExplorerIcon type="agent" /></span><div><p>INDEXED BSC AGENTS</p><b>{page.total.toLocaleString()}</b><small>Live ERC-8004 identity index</small></div></div>
+        <div className="overview-facts"><div><p>NETWORK</p><b>BNB Mainnet</b></div><div><p>VERIFIED TASKS</p><b>Not available</b></div><div><p>VERIFIED HIRES</p><b>Not available</b></div></div>
       </section>
       <section className="split-panels">
         <div className="panel"><div className="panel-title"><h2>Latest Agents</h2><Link href="/agents">View all agents</Link></div><div className="feed-list">{agents.slice(0, 6).map((agent) => <div className="feed-row" key={agent.id}><span className="feed-icon"><ExplorerIcon type="agent" /></span><div><Link href={`/agents/${agent.token_id}`}><b>{agent.name}</b></Link><small>Agent #{agent.token_id}</small></div><div className="feed-meta"><span>{relativeDate(agent.created_at)}</span><code>{short(agent.owner_address)}</code></div></div>)}</div><Link className="panel-footer" href="/agents">View all agents <ExplorerIcon type="arrow" /></Link></div>

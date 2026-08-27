@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Providers } from "@/components/providers";
-import "@fontsource-variable/manrope";
+import "@fontsource-variable/archivo";
 import "./globals.css";
 import "./wallet.css";
 import "./altana.css";
