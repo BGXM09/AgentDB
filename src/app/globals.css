@@ -1077,6 +1077,12 @@ footer {
   padding: 0;
   border-radius: 8px;
 }
+.universal-search:not(.compact) {
+  border-radius: 999px;
+}
+.universal-search:not(.compact) input {
+  border-radius: 999px 0 0 999px;
+}
 .universal-search:not(.compact) .search-label {
   display: none;
 }
@@ -1221,6 +1227,82 @@ footer {
   padding-top: 15px;
   padding-bottom: 17px;
   border-top: 1px solid;
+}
+.split-panels {
+  align-items: start;
+  gap: 34px;
+  padding-top: 42px;
+}
+.split-panels .panel {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.split-panels .panel-title {
+  min-height: auto;
+  margin-bottom: 15px;
+  padding: 0 2px;
+  border: 0;
+}
+.split-panels .panel-title h2 {
+  font-size: 20px;
+}
+.split-panels .feed-list {
+  display: grid;
+  gap: 10px;
+}
+.split-panels .feed-row {
+  min-height: 78px;
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 17px;
+  background: #f4f4f4;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.045);
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+.split-panels .feed-row:nth-child(even) {
+  background: #fafafa;
+}
+.split-panels .feed-row:hover {
+  z-index: 1;
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 13px 28px rgba(0, 0, 0, 0.09);
+}
+.split-panels .feed-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+.split-panels .feed-icon.tx {
+  border-radius: 13px;
+}
+.split-panels .empty-row {
+  background: #ededed;
+  box-shadow: none;
+}
+.split-panels .panel-footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin-top: 13px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: #121212;
+  color: #fff;
+}
+.split-panels .panel-footer:hover {
+  background: #2a2a2a;
+  text-decoration: none;
 }
 @media (max-width: 850px) {
   .category-grid {
@@ -2276,6 +2358,9 @@ footer {
   .stats-bento-category {
     grid-column: span 1;
     min-height: 138px;
+  }
+  .split-panels {
+    gap: 38px;
   }
 }
 @media (max-width: 560px) {
