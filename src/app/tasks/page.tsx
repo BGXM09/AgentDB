@@ -1,5 +1,11 @@
 import Link from "next/link";
+import { formatUnits } from "viem";
+import { listMarketplaceTasks } from "@/lib/supabase/tasks";
+import { short } from "@/lib/format";
 
-export default function TasksPage() {
-  return <main className="container page-content"><div className="breadcrumb"><Link href="/">Home</Link><span>/</span>Tasks</div><div className="page-heading"><div><h1>Task Explorer</h1><p>ERC-8183 jobs mediated and verified by AgentDB.</p></div><span className="count-pill">0 indexed tasks</span></div><div className="notice warning-notice"><b>No production task data exists yet.</b> Agent registrations and transactions are not tasks. This table will populate only from verified ERC-8183 lifecycle evidence.</div><section className="panel table-panel"><div className="panel-title"><h2>Latest Tasks</h2></div><div className="table-scroll"><table className="explorer-table"><thead><tr><th>Task ID</th><th>Agent</th><th>Client</th><th>Service</th><th>Budget</th><th>Status</th><th>Age</th></tr></thead><tbody></tbody></table></div><div className="empty"><span className="empty-symbol">T</span><b>No AgentDB tasks found</b><p>A real funded ERC-8183 job is required before a task can appear here.</p></div></section></main>;
+export const dynamic = "force-dynamic";
+
+export default async function TasksPage() {
+  const tasks = await listMarketplaceTasks();
+  return <main className="container page-content"><div className="page-heading"><div><h1>Jobs</h1><p>Work funded through verified ERC-8183 escrow.</p></div><span className="count-pill">{tasks.length} verified</span></div><section className="panel table-panel"><div className="panel-title"><h2>Marketplace jobs</h2></div>{tasks.length ? <div className="table-scroll"><table className="explorer-table"><thead><tr><th>Job</th><th>Agent</th><th>Buyer</th><th>Budget</th><th>Status</th><th>Transaction</th></tr></thead><tbody>{tasks.map((task) => <tr key={task.id}><td>#{task.job_id}</td><td><Link href={`/agents/${task.agent_id}`}>Agent #{task.agent_id}</Link></td><td><code>{short(task.client_address)}</code></td><td>{formatUnits(BigInt(task.budget), 18)} $U</td><td>{task.status}</td><td>{task.transaction_hash ? <a href={`https://bscscan.com/tx/${task.transaction_hash}`} target="_blank" rel="noreferrer">View ↗</a> : "Relay confirmed"}</td></tr>)}</tbody></table></div> : <div className="empty"><span className="empty-symbol">J</span><b>No funded jobs yet</b><p>Completed quote review and verified ERC-8183 funding will appear here.</p></div>}</section></main>;
 }
