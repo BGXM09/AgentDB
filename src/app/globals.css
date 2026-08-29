@@ -1279,6 +1279,29 @@ footer {
   color: #777;
   font-size: 10px;
 }
+.marketplace-hireable {
+  margin: 34px 0 42px;
+  padding: 26px;
+  border: 2px solid #111;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 6px 6px 0 #111;
+}
+.marketplace-hireable .section-heading {
+  margin-bottom: 20px;
+}
+.marketplace-hireable .agent-card-grid {
+  grid-template-columns: minmax(0, 420px);
+}
+.marketplace-hireable .agent-registry-card {
+  min-height: 240px;
+  background: #f4ed35;
+}
+.marketplace-hireable .section-heading > a {
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 @media (max-width: 900px) {
   .agent-card-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1297,6 +1320,16 @@ footer {
   }
   .agent-registry-card {
     min-height: 250px;
+  }
+  .marketplace-hireable {
+    padding: 20px;
+  }
+  .marketplace-hireable .section-heading {
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .marketplace-hireable .agent-card-grid {
+    grid-template-columns: 1fr;
   }
 }
 
