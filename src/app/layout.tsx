@@ -5,6 +5,7 @@ import { Providers } from "@/components/providers";
 import "@fontsource-variable/archivo";
 import "./globals.css";
 import "./wallet.css";
+import "./altana.css";
 import "./interior.css";
 
 export const metadata: Metadata = { title: "AgentDB", description: "Explore. Verify. Hire." };

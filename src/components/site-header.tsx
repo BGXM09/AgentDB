@@ -10,10 +10,11 @@ export function SiteHeader() {
           <span className="wordmark-db">DB</span>
         </Link>
         <nav>
-          <Link href="/agents">Marketplace</Link>
-          <Link href="/tasks">My Agents</Link>
+          <Link href="/">Home</Link>
+          <Link href="/agents">Agents</Link>
+          <Link href="/tasks">Tasks</Link>
           <Link href="/activity">Activity</Link>
-          <Link href="/explorer">Explorer</Link>
+          <Link href="/leaderboard">Leaderboard</Link>
         </nav>
         <WalletControl />
       </div>

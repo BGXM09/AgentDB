@@ -1,6 +1,0 @@
-import Link from "next/link";
-import { AgentTable } from "@/components/agent-table";
-import { hydrateAgents } from "@/lib/agents/load";
-import { listBscAgents } from "@/lib/scan8004/client";
-export const dynamic = "force-dynamic";
-export default async function ExplorerAgentsPage({ searchParams }: { searchParams: Promise<{ offset?: string }> }) { const params = await searchParams; const offset = Math.max(0, Number(params.offset) || 0); const page = await listBscAgents({ limit: 25, offset }); const agents = await hydrateAgents(page.items); return <main className="container page-content"><div className="page-heading"><div><h1>Indexed agents</h1><p>Technical registry view. Listing here does not mean an agent is hireable.</p></div><span className="count-pill">{page.total.toLocaleString()} identities</span></div><section className="panel table-panel"><AgentTable agents={agents} marketplace={false}/><div className="pagination"><Link aria-disabled={offset === 0} href={`/explorer/agents?offset=${Math.max(0, offset - page.limit)}`}>Previous</Link><span>Page {Math.floor(offset / page.limit) + 1}</span><Link href={`/explorer/agents?offset=${offset + page.limit}`}>Next</Link></div></section></main>; }

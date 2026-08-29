@@ -1,29 +1,17 @@
 import { randomUUID } from "node:crypto";
+import { ERC8183_ADDRESSES } from "@altananetwork/sdk";
 import { formatUnits, isAddress, isHex } from "viem";
-import { ERC8183_ADDRESSES } from "./contracts";
 import { getBscAgent } from "../scan8004/client";
 import type { CommerceAdapter, Quote, QuoteRequest } from "./types";
 
+const AUDITED_AGENT_ID = "265375";
+const AUDITED_HOST = "bnb-lp.172-104-171-139.nip.io";
+
 type NegotiationData = { response?: { accepted?: boolean; terms?: { price?: string; currency?: string }; estimated_completion_seconds?: number; quote_expires_at?: number }; request?: unknown; request_hash?: string; response_hash?: string; negotiation_hash?: string; provider_sig?: string; chain_id?: number; verifying_contract?: string };
 
-function findServiceEndpoint(services: unknown): string | null {
-  const serialized = services as Record<string, unknown> | null;
-  if (!serialized) return null;
-  const candidates: unknown[] = Array.isArray(serialized) ? serialized : Object.values(serialized);
-  for (const candidate of candidates) {
-    if (typeof candidate === "string" && /^https:\/\//.test(candidate)) return candidate;
-    if (candidate && typeof candidate === "object") {
-      const value = candidate as Record<string, unknown>;
-      const endpoint = value.endpoint ?? value.url;
-      if (typeof endpoint === "string" && /^https:\/\//.test(endpoint)) return endpoint;
-    }
-  }
-  return null;
-}
-
 export function parseNegotiatedQuote(agentId: string, provider: string, payload: unknown): Quote {
-  const root = payload as { result?: { parts?: Array<{ kind?: string; data?: NegotiationData }> } } & NegotiationData;
-  const data = root.result?.parts?.find((part) => part.kind === "data")?.data ?? (root.response ? root : undefined);
+  const root = payload as { result?: { parts?: Array<{ kind?: string; data?: NegotiationData }> } };
+  const data = root.result?.parts?.find((part) => part.kind === "data")?.data;
   const terms = data?.response?.terms;
   const addresses = ERC8183_ADDRESSES[56];
   if (!data?.response?.accepted || !terms?.price || !terms.currency || !data.negotiation_hash || !data.provider_sig || data.chain_id !== 56 || !data.verifying_contract) throw new Error("Agent returned an incomplete quote.");
@@ -38,30 +26,22 @@ export function parseNegotiatedQuote(agentId: string, provider: string, payload:
 }
 
 export class ERC8183CommerceAdapter implements CommerceAdapter {
-  async detect(agentId: string) {
-    const agent = await getBscAgent(agentId);
-    const endpoint = findServiceEndpoint(agent.services ?? agent.endpoints ?? agent.metadata?.services);
-    const record = JSON.stringify(agent).toLowerCase();
-    return Boolean(endpoint && (record.includes("erc8183") || record.includes("erc-8183") || record.includes("/apex")));
-  }
+  async detect(agentId: string) { return agentId === AUDITED_AGENT_ID; }
   async getQuote(input: QuoteRequest) {
+    if (!(await this.detect(input.agentId))) throw new Error("No audited ERC-8183 quote integration is available for this agent.");
     const agent = await getBscAgent(input.agentId);
-    if (!(await this.detect(input.agentId))) throw new Error("This agent is not ready to hire.");
-    const cardUrl = findServiceEndpoint(agent.services ?? agent.endpoints ?? agent.metadata?.services);
-    if (!cardUrl) throw new Error("This agent is temporarily unavailable.");
+    const services = agent.services as Record<string, { endpoint?: string }> | null;
+    const cardUrl = services?.a2a?.endpoint;
+    if (!cardUrl) throw new Error("Agent has no A2A endpoint.");
     const parsedCard = new URL(cardUrl);
-    if (parsedCard.protocol !== "https:") throw new Error("This agent does not use a secure service endpoint.");
-    const studioApex = parsedCard.pathname.includes("/apex");
-    let card: { url?: string } = {};
-    if (!studioApex) {
-      const cardResponse = await fetch(cardUrl, { signal: AbortSignal.timeout(15_000), cache: "no-store" });
-      if (!cardResponse.ok) throw new Error("Agent card is unavailable.");
-      card = await cardResponse.json() as { url?: string };
-    }
-    const messageUrl = new URL(studioApex ? cardUrl.replace(/\/$/, "") + "/negotiate" : card.url ?? cardUrl);
-    if (messageUrl.protocol !== "https:" || messageUrl.hostname !== parsedCard.hostname) throw new Error("Agent messaging endpoint is not secure.");
-    const negotiation = { task_description: input.taskDescription, terms: { deliverables: input.deliverables, quality_standards: input.qualityStandards } };
-    const rpcBody = studioApex ? negotiation : { jsonrpc: "2.0", id: randomUUID(), method: "message/send", params: { message: { role: "user", messageId: randomUUID(), parts: [{ kind: "data", data: { skill: "negotiate", ...negotiation } }] } } };
+    if (parsedCard.protocol !== "https:" || parsedCard.hostname !== AUDITED_HOST) throw new Error("Agent endpoint is not allowlisted.");
+    const cardResponse = await fetch(cardUrl, { signal: AbortSignal.timeout(15_000), cache: "no-store" });
+    if (!cardResponse.ok) throw new Error("Agent card is unavailable.");
+    const card = await cardResponse.json() as { url?: string };
+    if (!card.url) throw new Error("Agent card has no messaging URL.");
+    const messageUrl = new URL(card.url);
+    if (messageUrl.protocol !== "https:" || messageUrl.hostname !== AUDITED_HOST) throw new Error("Agent messaging endpoint is not allowlisted.");
+    const rpcBody = { jsonrpc: "2.0", id: randomUUID(), method: "message/send", params: { message: { role: "user", messageId: randomUUID(), parts: [{ kind: "data", data: { skill: "negotiate", task_description: input.taskDescription, terms: { deliverables: input.deliverables, quality_standards: input.qualityStandards } } }] } } };
     const response = await fetch(messageUrl, { method: "POST", headers: { "content-type": "application/json" }, signal: AbortSignal.timeout(30_000), body: JSON.stringify(rpcBody) });
     if (!response.ok) throw new Error("Agent quote request failed.");
     return parseNegotiatedQuote(input.agentId, typeof agent.agent_wallet === "string" ? agent.agent_wallet : agent.owner_address, await response.json());
