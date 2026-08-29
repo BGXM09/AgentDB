@@ -2,9 +2,9 @@ import type { AgentCategory, ScanAgentDetail } from "./types";
 
 const rules: Array<{ category: AgentCategory; terms: RegExp[] }> = [
   { category: "Health Factor Monitoring", terms: [/health.?factor/i, /liquidat/i, /position (?:protection|risk|monitor)/i, /collateral (?:health|risk|monitor)/i, /lending risk/i, /leverage risk/i, /risk alert/i] },
-  { category: "Grid Trading", terms: [/grid trad/i, /grid strateg/i, /grid order/i, /market.?mak/i, /limit order/i, /trading bot/i, /algorithmic trad/i, /trading automat/i] },
+  { category: "Grid Trading", terms: [/grid.?trad/i, /grid.?strateg/i, /grid.?order/i, /bounded.?grid/i] },
   { category: "Rebalancing", terms: [/rebalanc/i, /liquidity (?:range|position|management)/i, /lp range/i, /concentrated liquidity/i, /portfolio (?:allocation|management)/i, /asset allocation/i] },
-  { category: "Yield Optimisation", terms: [/yield optimi[sz]/i, /yield farm/i, /best (?:apr|apy)/i, /highest (?:apr|apy)/i, /yield rout/i, /staking reward/i, /liquidity reward/i, /yield vault/i, /lending yield/i, /passive (?:yield|return)/i] },
+  { category: "Yield Optimisation", terms: [/yield.?optimi[sz]/i, /yield.?farm/i, /best.?(?:apr|apy)/i, /highest.?(?:apr|apy)/i, /yield.?rout/i, /staking.?reward/i, /liquidity.?reward/i, /yield.?vault/i, /lending.?yield/i, /passive.?(?:yield|return)/i] },
 ];
 
 const broadRules: Array<{ category: AgentCategory; terms: RegExp[] }> = [
@@ -42,4 +42,26 @@ export function classifyAgent(agent: Pick<ScanAgentDetail, "name" | "description
     }
   }
   return { category: "Other" as const, confidence: "low" as const, evidence: [] };
+}
+
+type CategoryEvidenceAgent = Pick<ScanAgentDetail, "name" | "description" | "categories" | "tags" | "supported_protocols" | "services" | "endpoints" | "metadata" | "raw_metadata">;
+
+export function classifyConsumerCategories(agent: CategoryEvidenceAgent) {
+  const declared = JSON.stringify({
+    categories: agent.categories,
+    tags: agent.tags,
+    services: agent.services,
+    endpoints: agent.endpoints,
+    metadata: agent.metadata,
+    rawMetadata: agent.raw_metadata,
+    protocols: agent.supported_protocols,
+  });
+  const profile = [agent.name, agent.description].filter(Boolean).join(" ");
+
+  return rules.flatMap((rule) => {
+    const declaredMatches = rule.terms.filter((term) => term.test(declared)).map((term) => `declared:${term.source}`);
+    const profileMatches = rule.terms.filter((term) => term.test(profile)).map((term) => `profile:${term.source}`);
+    const evidence = [...declaredMatches, ...profileMatches];
+    return evidence.length ? [{ category: rule.category, evidence, confidence: declaredMatches.length ? "high" as const : "medium" as const }] : [];
+  });
 }

@@ -63,9 +63,14 @@ export async function searchBscAgents(query: string, limit = 10) {
   return request<ScanAgentPage>("/agents/search/semantic", params);
 }
 
-export async function searchBscAgentCategory(queries: string[], limit = 100): Promise<ScanAgentPage> {
+export async function searchBscAgentCategory(queries: string[], limit = 100, reviewedIds: string[] = []): Promise<ScanAgentPage> {
   const query = queries.join("; ");
-  return searchBscAgents(query, limit);
+  const [page, ...reviewed] = await Promise.all([
+    searchBscAgents(query, limit),
+    ...reviewedIds.map((tokenId) => getBscAgent(tokenId).catch(() => null)),
+  ]);
+  const items = [...new Map([...reviewed.filter((agent): agent is ScanAgentDetail => Boolean(agent)), ...page.items].map((agent) => [agent.token_id, agent])).values()];
+  return { ...page, items, total: items.length };
 }
 
 export async function getBscAgent(tokenId: string) {

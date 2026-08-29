@@ -1,12 +1,13 @@
 import type { AgentCategory, ScanAgentSummary } from "./types";
+import { classifyConsumerCategories } from "./classifier";
 
 export const CATEGORY_DISPLAY_DEPTH = 24;
 
 export const categories: Array<{ slug: string; name: AgentCategory; queries: string[]; description: string; auditedIds: string[]; art: string }> = [
   { slug: "rebalancing", name: "Rebalancing", queries: ["portfolio rebalancing and asset allocation", "LP liquidity range management", "automated DeFi portfolio management", "concentrated liquidity positions"], description: "Keep a portfolio or liquidity position close to the plan you chose.", auditedIds: ["265375", "293054", "45650"], art: "/media/categories/rebalancing.jpg" },
   { slug: "grid-trading", name: "Grid Trading", queries: ["grid trading and limit orders", "automated crypto trading bot", "algorithmic market making", "DEX trading automation"], description: "Build or run a grid strategy around the market and limits you choose.", auditedIds: ["292939", "266234", "302258", "267697"], art: "/media/categories/grid-trading.jpg" },
-  { slug: "yield-optimisation", name: "Yield Optimisation", queries: ["DeFi yield optimisation and farming", "staking and liquidity rewards", "vault APY opportunities", "lending yield and passive returns"], description: "Compare ways to put idle assets to work at a risk level you accept.", auditedIds: ["267698", "3416", "133221", "302258"], art: "/media/categories/yield-optimisation.jpg" },
-  { slug: "health-factor-monitoring", name: "Health Factor Monitoring", queries: ["DeFi position risk monitoring", "lending liquidation alerts", "collateral and leverage risk", "loan health monitoring"], description: "Watch a lending position and warn you before liquidation risk gets too close.", auditedIds: ["292058", "179543", "302258"], art: "/media/categories/health-monitoring.jpg" },
+  { slug: "yield-optimisation", name: "Yield Optimisation", queries: ["DeFi yield optimisation and farming", "staking and liquidity rewards", "vault APY opportunities", "lending yield and passive returns"], description: "Compare ways to put idle assets to work at a risk level you accept.", auditedIds: ["267698", "3416", "133221"], art: "/media/categories/yield-optimisation.jpg" },
+  { slug: "health-factor-monitoring", name: "Health Factor Monitoring", queries: ["DeFi position risk monitoring", "lending liquidation alerts", "collateral and leverage risk", "loan health monitoring"], description: "Watch a lending position and warn you before liquidation risk gets too close.", auditedIds: ["292058", "179543"], art: "/media/categories/health-monitoring.jpg" },
 ];
 
 function hasUsefulProfile(agent: ScanAgentSummary) {
@@ -15,8 +16,9 @@ function hasUsefulProfile(agent: ScanAgentSummary) {
   return Boolean(name && description && description.length >= 24);
 }
 
-function categoryRank(category: (typeof categories)[number], agent: ScanAgentSummary, semanticRank: number) {
-  const audited = category.auditedIds.includes(agent.token_id) ? 1 : 0;
+function categoryRank(category: (typeof categories)[number], agent: ScanAgentSummary, semanticRank: number, evidenceCount: number) {
+  const audit = auditedStatus[agent.token_id];
+  const auditWeight = audit?.tone === "success" ? 80 : audit?.tone === "warning" ? 10 : audit ? 5 : category.auditedIds.includes(agent.token_id) ? 20 : 0;
   const relevance = 1 / Math.log2(semanticRank + 2);
   const reputation = agent.total_feedbacks > 0
     ? Math.min(agent.total_feedbacks, 20) / 20 * Math.max(0, Math.min(agent.average_score, 5)) / 5
@@ -24,24 +26,42 @@ function categoryRank(category: (typeof categories)[number], agent: ScanAgentSum
   const activity = Math.max(0, Math.min(agent.health_score ?? 0, 100)) / 100;
   const registryQuality = Math.min(Math.log1p(Math.max(agent.total_score ?? 0, 0)) / Math.log(101), 1);
   const serviceEvidence = agent.x402_supported || agent.supported_protocols?.length > 0 ? 1 : 0;
+  const endpointTrust = agent.is_endpoint_verified ? 1 : 0;
+  const validationTrust = (agent.total_validations ?? 0) > 0
+    ? Math.min((agent.successful_validations ?? 0) / Math.max(agent.total_validations ?? 1, 1), 1)
+    : 0;
+  const indexedQuality = Math.max(0, Math.min(agent.quality_score ?? 0, 100)) / 100;
+  const indexedActivity = Math.max(0, Math.min(agent.activity_score ?? 0, 100)) / 100;
 
   // Relevance finds the right job; the remaining signals decide which credible
   // candidates a consumer should see first. Human-audited candidates stay first.
-  return audited * 10_000
+  return auditWeight
     + relevance * 40
     + registryQuality * 22
     + reputation * 18
     + activity * 10
     + Number(agent.is_verified) * 8
-    + serviceEvidence * 2;
+    + endpointTrust * 8
+    + validationTrust * 6
+    + indexedQuality * 6
+    + indexedActivity * 4
+    + Math.min(evidenceCount, 3) * 4
+    + serviceEvidence * 2
+    - Number(agent.is_active === false) * 20;
 }
 
 export function rankCategoryAgents(category: (typeof categories)[number], agents: ScanAgentSummary[]) {
   const unique = [...new Map(agents.map((agent) => [agent.token_id, agent])).values()];
-  const qualified = unique.filter((agent) => category.auditedIds.includes(agent.token_id) || hasUsefulProfile(agent));
+  const qualified = unique.flatMap((agent) => {
+    const classification = classifyConsumerCategories(agent).find((item) => item.category === category.name);
+    const audited = category.auditedIds.includes(agent.token_id);
+    if (!hasUsefulProfile(agent) && !audited) return [];
+    if (!classification && !audited) return [];
+    return [{ agent, evidenceCount: classification?.evidence.length ?? 0 }];
+  });
 
   return qualified
-    .map((agent, semanticRank) => ({ agent, score: categoryRank(category, agent, semanticRank) }))
+    .map(({ agent, evidenceCount }, semanticRank) => ({ agent, score: categoryRank(category, agent, semanticRank, evidenceCount) }))
     .sort((a, b) => b.score - a.score || b.agent.total_score - a.agent.total_score)
     .map(({ agent }) => agent);
 }

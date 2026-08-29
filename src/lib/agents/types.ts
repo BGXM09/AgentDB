@@ -36,14 +36,25 @@ export interface ScanAgentSummary {
   average_score: number;
   created_at: string;
   updated_at: string;
+  tags?: string[] | null;
+  categories?: string[] | null;
+  services?: unknown[] | Record<string, unknown> | null;
+  endpoints?: unknown[];
+  metadata?: Record<string, unknown> | null;
+  raw_metadata?: Record<string, unknown> | null;
+  similarity_score?: number | null;
+  is_endpoint_verified?: boolean;
+  is_active?: boolean;
+  total_validations?: number;
+  successful_validations?: number;
+  quality_score?: number;
+  activity_score?: number;
+  freshness_score?: number;
+  metadata_completeness_score?: number;
   [key: string]: unknown;
 }
 
 export interface ScanAgentDetail extends ScanAgentSummary {
-  tags?: string[] | null;
-  services?: unknown[] | Record<string, unknown> | null;
-  endpoints?: unknown[];
-  metadata?: Record<string, unknown> | null;
   [key: string]: unknown;
 }
 

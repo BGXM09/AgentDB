@@ -13,7 +13,7 @@ function agent(tokenId: string, overrides: Partial<ScanAgentSummary> = {}): Scan
     is_testnet: false,
     owner_address: "0x0000000000000000000000000000000000000000",
     name: `Agent ${tokenId}`,
-    description: "A complete plain-language description of the service offered.",
+    description: "A complete portfolio rebalancing service with plain-language instructions.",
     image_url: "",
     is_verified: false,
     star_count: 0,
@@ -47,6 +47,23 @@ describe("rankCategoryAgents", () => {
       agent("empty", { description: "" }),
     ]);
     expect(ranked.map((item) => item.token_id)).toEqual(["useful"]);
+  });
+
+  it("rejects semantically returned candidates without category evidence", () => {
+    const ranked = rankCategoryAgents(category, [
+      agent("unrelated", { description: "A complete service for writing and translating marketing content.", similarity_score: 0.79 }),
+    ]);
+    expect(ranked).toEqual([]);
+  });
+
+  it("accepts structured category evidence from raw agent metadata", () => {
+    const ranked = rankCategoryAgents(categories[1], [
+      agent("structured", {
+        description: "A complete crypto strategy service for BNB Chain users.",
+        raw_metadata: { offchain_content: { attributes: [{ trait_type: "Category", value: "grid-trading" }] } },
+      }),
+    ]);
+    expect(ranked[0].token_id).toBe("structured");
   });
 
   it("uses trust and activity to reorder similarly relevant candidates", () => {

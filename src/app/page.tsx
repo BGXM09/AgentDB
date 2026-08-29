@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const [page, ...categoryPages] = await Promise.all([
     listBscAgents({ limit: 10, sortBy: "created_at" }),
-    ...categories.map((category) => searchBscAgentCategory(category.queries, 100)),
+    ...categories.map((category) => searchBscAgentCategory(category.queries, 100, category.auditedIds)),
   ]);
   const agents = page.items as ScanAgentDetail[];
   const categoryCounts = Object.fromEntries(categories.map((category, index) => [category.slug, rankCategoryAgents(category, categoryPages[index].items).length]));
