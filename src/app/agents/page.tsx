@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { MarketplaceAgentList } from "@/components/marketplace-agent-list";
 import { SearchBox } from "@/components/search-box";
-import { categories, CATEGORY_DISPLAY_DEPTH } from "@/lib/agents/catalog";
+import { categories, CATEGORY_DISPLAY_DEPTH, rankCategoryAgents } from "@/lib/agents/catalog";
 import { getConsumerCategory } from "@/lib/agents/consumer";
 import type { ScanAgentDetail, ScanAgentSummary } from "@/lib/agents/types";
 import { listBscAgents, searchBscAgentCategory } from "@/lib/scan8004/client";
@@ -20,12 +20,7 @@ export default async function AgentsPage({ searchParams }: { searchParams: Promi
   let total: number;
   if (category) {
     const categoryPage = await searchBscAgentCategory(category.queries, 100);
-    let matches = categoryPage.items;
-    matches.sort((a, b) => {
-      const auditedFirst = Number(category.auditedIds.includes(b.token_id)) - Number(category.auditedIds.includes(a.token_id));
-      return auditedFirst || b.total_score - a.total_score;
-    });
-    matches = matches.slice(0, CATEGORY_DISPLAY_DEPTH);
+    const matches = rankCategoryAgents(category, categoryPage.items);
     total = matches.length;
     items = matches.slice(offset, offset + pageSize);
   } else {

@@ -3,16 +3,10 @@ import { categories } from "@/lib/agents/catalog";
 
 interface StatsBentoProps {
   indexedAgents: number;
+  categoryCounts: Record<string, number>;
 }
 
-const categoryArt: Record<string, string> = {
-  rebalancing: "/media/categories/rebalancing.jpg",
-  "grid-trading": "/media/categories/grid-trading.jpg",
-  "yield-optimisation": "/media/categories/yield-optimisation.jpg",
-  "health-factor-monitoring": "/media/categories/health-monitoring.jpg",
-};
-
-export const StatsBento = ({ indexedAgents }: StatsBentoProps) => {
+export const StatsBento = ({ indexedAgents, categoryCounts }: StatsBentoProps) => {
   return (
     <section className="stats-bento" aria-label="Explore AgentDB">
       <Link className="stats-bento-primary" href="/agents">
@@ -27,8 +21,8 @@ export const StatsBento = ({ indexedAgents }: StatsBentoProps) => {
 
       {categories.map((category) => (
         <Link className="stats-bento-category" href={`/categories/${category.slug}`} key={category.slug}>
-          <img className={`category-image category-image-${category.slug}`} src={categoryArt[category.slug]} alt="" aria-hidden="true" />
-          <span className="stats-bento-label">Agent category</span>
+          <img className={`category-image category-image-${category.slug}`} src={category.art} alt="" aria-hidden="true" />
+          <span className="stats-bento-label">{categoryCounts[category.slug].toLocaleString()} curated matches</span>
           <strong>{category.name}</strong>
         </Link>
       ))}
