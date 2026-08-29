@@ -86,4 +86,20 @@ describe("rankCategoryAgents", () => {
     ]);
     expect(ranked[0].token_id).toBe("trusted");
   });
+
+  it("ranks visually complete storefronts before sparse semantic matches", () => {
+    const ranked = rankCategoryAgents(category, [
+      agent("sparse", { name: "test.agent", description: "trading", image_url: "", similarity_score: 0.99 }),
+      agent("complete", {
+        name: "Portfolio Steward",
+        description: "A detailed portfolio service that explains its rebalancing process, safeguards, and expected result to users.",
+        image_url: "https://example.com/avatar.png",
+        services: { a2a: { endpoint: "https://example.com/a2a" } },
+        tags: ["portfolio", "rebalancing"],
+        supported_protocols: ["A2A"],
+        similarity_score: 0.75,
+      }),
+    ]);
+    expect(ranked[0].token_id).toBe("complete");
+  });
 });

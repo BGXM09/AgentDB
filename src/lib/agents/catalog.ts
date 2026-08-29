@@ -25,6 +25,28 @@ function normalizedAgentName(name: string) {
     .trim();
 }
 
+function hasHttpsImage(imageUrl: string) {
+  try { return new URL(imageUrl).protocol === "https:"; }
+  catch { return false; }
+}
+
+function profileCompleteness(agent: ScanAgentSummary) {
+  const name = agent.name?.trim() ?? "";
+  const description = agent.description?.trim() ?? "";
+  const genericName = !name || /^(?:new|test|demo|tradingbot|agent)(?:\.|\s|#|\d|$)/i.test(name);
+  const services = agent.services ?? agent.endpoints;
+  const serviceCount = Array.isArray(services) ? services.length : services && typeof services === "object" ? Object.keys(services).length : 0;
+  const indexedCompleteness = Math.max(0, Math.min(agent.metadata_completeness_score ?? 0, 100)) / 100;
+
+  return Number(hasHttpsImage(agent.image_url)) * 4
+    + Number(!genericName) * 2
+    + (description.length >= 80 ? 3 : description.length >= 24 ? 2 : description ? 1 : 0)
+    + Math.min(serviceCount, 2)
+    + Number((agent.tags?.length ?? 0) > 0 || (agent.categories?.length ?? 0) > 0)
+    + Number((agent.supported_protocols?.length ?? 0) > 0)
+    + indexedCompleteness;
+}
+
 function categoryRank(agent: ScanAgentSummary, semanticRank: number) {
   const relevance = agent.similarity_score ?? 1 / Math.log2(semanticRank + 2);
   const reputation = agent.total_feedbacks > 0
@@ -60,8 +82,8 @@ export function rankCategoryAgents(_category: (typeof categories)[number], agent
   const semanticMatches = unique.filter((agent) => typeof agent.similarity_score === "number");
 
   const scored = semanticMatches
-    .map((agent, semanticRank) => ({ agent, score: categoryRank(agent, semanticRank) + (hasUsefulProfile(agent) ? 6 : 0) }))
-    .sort((a, b) => b.score - a.score || b.agent.total_score - a.agent.total_score);
+    .map((agent, semanticRank) => ({ agent, completeness: profileCompleteness(agent), score: categoryRank(agent, semanticRank) + (hasUsefulProfile(agent) ? 6 : 0) }))
+    .sort((a, b) => b.completeness - a.completeness || b.score - a.score || b.agent.total_score - a.agent.total_score);
 
   const seenNames = new Set<string>();
   const diverse: typeof scored = [];
