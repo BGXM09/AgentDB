@@ -47,7 +47,7 @@ export default async function AgentsPage({ searchParams }: { searchParams: Promi
   return <main className="container page-content marketplace-page">
     <div className="page-heading marketplace-intro"><div><h1>What do you want done?</h1><p>Choose a job, compare the result, then put the right agent to work.</p></div><span className="count-pill">{total.toLocaleString()} matches</span></div>
     <nav className="job-picker" aria-label="Choose a job">
-      {categories.map((item) => { const copy = getConsumerCategory(item.name); return <Link className={category?.slug === item.slug ? "active" : ""} href={`/agents?category=${item.slug}`} key={item.slug}><div><b>{copy.action}</b><small>{copy.promise}</small></div><span>Up to {CATEGORY_DISPLAY_DEPTH}</span></Link>; })}
+      {categories.map((item) => { const copy = getConsumerCategory(item.name); return <Link className={category?.slug === item.slug ? "active" : ""} href={`/agents?category=${item.slug}`} key={item.slug}><div><b>{copy.action}</b><small>{copy.promise}</small></div></Link>; })}
     </nav>
     <SearchBox compact />
     <div className="marketplace-results-heading"><h2>{category ? `${category.name} agents` : "All agents"}</h2><span>Showing {first.toLocaleString()}–{last.toLocaleString()} of {total.toLocaleString()}</span></div>

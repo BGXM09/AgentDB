@@ -16,14 +16,13 @@ export function MarketplaceAgentList({ agents }: { agents: ScanAgentDetail[] }) 
       return <article className="marketplace-agent-row" key={agent.id}>
         <div className="marketplace-agent-main">
           <AgentAvatar imageUrl={normalized.canonical.imageUrl} name={name} />
-          <div><span className="marketplace-agent-category">{category}</span><h2>{name}</h2><p>{normalized.canonical.description || "This provider has not added a plain-language service description yet."}</p></div>
+          <div><span className="marketplace-agent-category">{category}</span><h2><Link href={`/agents/${agent.token_id}`}>{name}</Link></h2><p>{normalized.canonical.description || "This provider has not added a plain-language service description yet."}</p></div>
         </div>
         <dl className="marketplace-agent-answers">
           <div><dt>Price</dt><dd>{consumerPrice(agent)}</dd></div>
           <div><dt>Delivery</dt><dd>Not listed</dd></div>
           <div><dt>Proof</dt><dd>{consumerTrust(agent)}</dd></div>
         </dl>
-        <div className="marketplace-agent-action"><Link href={`/agents/${agent.token_id}`}><span>Open profile</span><b>Agent {agent.token_id}</b></Link></div>
       </article>;
     })}
   </div>;
