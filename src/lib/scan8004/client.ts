@@ -17,7 +17,7 @@ async function request<T>(path: string, params?: URLSearchParams): Promise<T> {
     try {
       const response = await fetch(url, {
         headers: { "X-API-Key": apiKey, Accept: "application/json" },
-        next: { revalidate: 60 },
+        next: { revalidate: 15 },
       });
       if (response.ok) return await response.json() as T;
       if (response.status !== 429 && response.status < 500) {
@@ -37,7 +37,7 @@ export async function listBscAgents(options: { limit?: number; offset?: number; 
     chain_id: "56",
     limit: String(Math.min(options.limit ?? 10, 50)),
     offset: String(Math.max(options.offset ?? 0, 0)),
-    sort_by: options.sortBy ?? "total_score",
+    sort_by: options.sortBy ?? "created_at",
     sort_order: "desc",
   });
   if (options.minFeedbacks) params.set("min_feedbacks", String(options.minFeedbacks));
@@ -64,16 +64,8 @@ export async function searchBscAgents(query: string, limit = 10) {
 }
 
 export async function searchBscAgentCategory(queries: string[], limit = 100): Promise<ScanAgentPage> {
-  const perQuery = Math.min(40, Math.max(12, Math.ceil(limit / Math.max(queries.length, 1)) * 2));
-  const pages = await Promise.all(queries.map((query) => searchBscAgents(query, perQuery)));
-  const unique = new Map<string, ScanAgentPage["items"][number]>();
-  for (const page of pages) {
-    for (const agent of page.items) {
-      if (!unique.has(agent.agent_id)) unique.set(agent.agent_id, agent);
-    }
-  }
-  const items = [...unique.values()].slice(0, limit);
-  return { items, total: unique.size, limit, offset: 0 };
+  const query = queries.join("; ");
+  return searchBscAgents(query, limit);
 }
 
 export async function getBscAgent(tokenId: string) {

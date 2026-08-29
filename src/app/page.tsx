@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { SearchBox } from "@/components/search-box";
 import { StatusBadge } from "@/components/status-badge";
-import { hydrateAgents } from "@/lib/agents/load";
 import { displayAgentName, relativeDate, short } from "@/lib/format";
+import type { ScanAgentDetail } from "@/lib/agents/types";
 import { listBscAgents, listPopularBscAgents } from "@/lib/scan8004/client";
 import { BackgroundShapes } from "@/components/ui/background-shapes";
 import { ExplorerIcon } from "@/components/explorer-icon";
@@ -14,13 +14,12 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const [page, popularPage] = await Promise.all([
-    listBscAgents({ limit: 10 }),
+    listBscAgents({ limit: 10, sortBy: "created_at" }),
     listPopularBscAgents(10),
   ]);
-  const [agents, popularAgents] = await Promise.all([
-    hydrateAgents(page.items, 8),
-    hydrateAgents(popularPage.items),
-  ]);
+  const agents = page.items as ScanAgentDetail[];
+  const popularAgents = [...popularPage.items]
+    .sort((a, b) => Number(Boolean(b.image_url)) - Number(Boolean(a.image_url))) as ScanAgentDetail[];
   return <main>
     <section className="hero-band"><BackgroundShapes className="hero-shapes" colors={["white"]}/><div className="container"><h1>Find your next onchain agent.</h1><SearchBox /></div></section>
     <div className="container overlap">
