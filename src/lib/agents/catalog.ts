@@ -1,13 +1,12 @@
 import type { AgentCategory, ScanAgentSummary } from "./types";
-import { classifyConsumerCategories } from "./classifier";
 
-export const CATEGORY_DISPLAY_DEPTH = 12;
+export const CATEGORY_DISPLAY_DEPTH = 50;
 
 export const categories: Array<{ slug: string; name: AgentCategory; queries: string[]; description: string; auditedIds: string[]; art: string }> = [
-  { slug: "rebalancing", name: "Rebalancing", queries: ["portfolio rebalancing and asset allocation", "LP liquidity range management", "automated DeFi portfolio management", "concentrated liquidity positions"], description: "Keep a portfolio or liquidity position close to the plan you chose.", auditedIds: ["265375", "293054", "45650"], art: "/media/categories/rebalancing.jpg" },
+  { slug: "rebalancing", name: "Rebalancing", queries: ["portfolio rebalancing and asset allocation", "LP liquidity range management", "automated DeFi portfolio management", "concentrated liquidity positions", "crypto portfolio management", "DeFi liquidity management", "automated asset allocation", "portfolio allocation agent"], description: "Keep a portfolio or liquidity position close to the plan you chose.", auditedIds: ["265375", "293054", "45650"], art: "/media/categories/rebalancing.jpg" },
   { slug: "grid-trading", name: "Grid Trading", queries: ["grid trading and limit orders", "automated crypto trading bot", "algorithmic market making", "DEX trading automation"], description: "Build or run a grid strategy around the market and limits you choose.", auditedIds: ["292939", "266234", "302258", "267697"], art: "/media/categories/grid-trading.jpg" },
-  { slug: "yield-optimisation", name: "Yield Optimisation", queries: ["DeFi yield optimisation and farming", "staking and liquidity rewards", "vault APY opportunities", "lending yield and passive returns"], description: "Compare ways to put idle assets to work at a risk level you accept.", auditedIds: ["267698", "3416", "133221"], art: "/media/categories/yield-optimisation.jpg" },
-  { slug: "health-factor-monitoring", name: "Health Factor Monitoring", queries: ["DeFi position risk monitoring", "lending liquidation alerts", "collateral and leverage risk", "loan health monitoring"], description: "Watch a lending position and warn you before liquidation risk gets too close.", auditedIds: ["292058", "179543"], art: "/media/categories/health-monitoring.jpg" },
+  { slug: "yield-optimisation", name: "Yield Optimisation", queries: ["DeFi yield optimisation and farming", "staking and liquidity rewards", "vault APY opportunities", "lending yield and passive returns", "DeFi yield opportunities", "crypto staking agent", "liquidity mining rewards", "DeFi lending returns", "automated vault strategy"], description: "Compare ways to put idle assets to work at a risk level you accept.", auditedIds: ["267698", "3416", "133221"], art: "/media/categories/yield-optimisation.jpg" },
+  { slug: "health-factor-monitoring", name: "Health Factor Monitoring", queries: ["DeFi position risk monitoring", "lending liquidation alerts", "collateral and leverage risk", "loan health monitoring", "DeFi risk monitoring", "lending collateral management", "liquidation protection", "portfolio risk alerts", "wallet position monitoring", "DeFi security alerts", "crypto risk analysis", "DeFi lending agent", "collateral analytics", "portfolio monitoring", "financial risk alerts", "asset risk monitoring"], description: "Watch a lending position and warn you before liquidation risk gets too close.", auditedIds: ["292058", "179543"], art: "/media/categories/health-monitoring.jpg" },
 ];
 
 function hasUsefulProfile(agent: ScanAgentSummary) {
@@ -16,10 +15,8 @@ function hasUsefulProfile(agent: ScanAgentSummary) {
   return Boolean(name && description && description.length >= 24);
 }
 
-function categoryRank(category: (typeof categories)[number], agent: ScanAgentSummary, semanticRank: number, evidenceCount: number) {
-  const audit = auditedStatus[agent.token_id];
-  const auditWeight = audit?.tone === "success" ? 80 : audit?.tone === "warning" ? 10 : audit ? 5 : category.auditedIds.includes(agent.token_id) ? 20 : 0;
-  const relevance = 1 / Math.log2(semanticRank + 2);
+function categoryRank(agent: ScanAgentSummary, semanticRank: number) {
+  const relevance = agent.similarity_score ?? 1 / Math.log2(semanticRank + 2);
   const reputation = agent.total_feedbacks > 0
     ? Math.min(agent.total_feedbacks, 20) / 20 * Math.max(0, Math.min(agent.average_score, 5)) / 5
     : 0;
@@ -35,8 +32,7 @@ function categoryRank(category: (typeof categories)[number], agent: ScanAgentSum
 
   // Relevance finds the right job; the remaining signals decide which credible
   // candidates a consumer should see first. Human-audited candidates stay first.
-  return auditWeight
-    + relevance * 40
+  return relevance * 60
     + registryQuality * 22
     + reputation * 18
     + activity * 10
@@ -45,24 +41,16 @@ function categoryRank(category: (typeof categories)[number], agent: ScanAgentSum
     + validationTrust * 6
     + indexedQuality * 6
     + indexedActivity * 4
-    + Math.min(evidenceCount, 3) * 16
     + serviceEvidence * 2
     - Number(agent.is_active === false) * 20;
 }
 
-export function rankCategoryAgents(category: (typeof categories)[number], agents: ScanAgentSummary[]) {
+export function rankCategoryAgents(_category: (typeof categories)[number], agents: ScanAgentSummary[]) {
   const unique = [...new Map(agents.map((agent) => [agent.token_id, agent])).values()];
-  const qualified = unique.flatMap((agent) => {
-    const classification = classifyConsumerCategories(agent).find((item) => item.category === category.name);
-    const audited = category.auditedIds.includes(agent.token_id);
-    const semanticCandidate = typeof agent.similarity_score === "number";
-    if (!hasUsefulProfile(agent) && !audited) return [];
-    if (!classification && !audited && !semanticCandidate) return [];
-    return [{ agent, evidenceCount: classification?.evidence.length ?? 0 }];
-  });
+  const semanticMatches = unique.filter((agent) => typeof agent.similarity_score === "number");
 
-  const scored = qualified
-    .map(({ agent, evidenceCount }, semanticRank) => ({ agent, score: categoryRank(category, agent, semanticRank, evidenceCount) }))
+  const scored = semanticMatches
+    .map((agent, semanticRank) => ({ agent, score: categoryRank(agent, semanticRank) + (hasUsefulProfile(agent) ? 6 : 0) }))
     .sort((a, b) => b.score - a.score || b.agent.total_score - a.agent.total_score);
 
   const seenNames = new Set<string>();

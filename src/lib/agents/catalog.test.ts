@@ -25,6 +25,7 @@ function agent(tokenId: string, overrides: Partial<ScanAgentSummary> = {}): Scan
     average_score: 0,
     created_at: "2026-01-01T00:00:00Z",
     updated_at: "2026-01-01T00:00:00Z",
+    similarity_score: 0.8,
     ...overrides,
   };
 }
@@ -32,26 +33,26 @@ function agent(tokenId: string, overrides: Partial<ScanAgentSummary> = {}): Scan
 describe("rankCategoryAgents", () => {
   const category = categories[0];
 
-  it("keeps audited candidates first", () => {
+  it("uses semantic similarity as the category-membership signal", () => {
     const ranked = rankCategoryAgents(category, [
-      agent("unreviewed", { is_verified: true, total_feedbacks: 20, average_score: 5, total_score: 100 }),
-      agent(category.auditedIds[0], { total_score: 0 }),
+      agent("weaker-match", { similarity_score: 0.72 }),
+      agent("stronger-match", { similarity_score: 0.92 }),
     ]);
-    expect(ranked[0].token_id).toBe(category.auditedIds[0]);
+    expect(ranked[0].token_id).toBe("stronger-match");
   });
 
   it("removes duplicate and empty low-quality profiles from the count", () => {
     const ranked = rankCategoryAgents(category, [
       agent("useful"),
       agent("useful"),
-      agent("empty", { description: "" }),
+      agent("not-semantic", { similarity_score: undefined }),
     ]);
     expect(ranked.map((item) => item.token_id)).toEqual(["useful"]);
   });
 
   it("rejects candidates without category or semantic evidence", () => {
     const ranked = rankCategoryAgents(category, [
-      agent("unrelated", { description: "A complete service for writing and translating marketing content." }),
+      agent("unrelated", { description: "A complete service for writing and translating marketing content.", similarity_score: undefined }),
     ]);
     expect(ranked).toEqual([]);
   });
@@ -64,18 +65,8 @@ describe("rankCategoryAgents", () => {
   });
 
   it("caps every category at the shared display depth", () => {
-    const ranked = rankCategoryAgents(category, Array.from({ length: 20 }, (_, index) => agent(String(index), { similarity_score: 0.8 })));
-    expect(ranked).toHaveLength(12);
-  });
-
-  it("accepts structured category evidence from raw agent metadata", () => {
-    const ranked = rankCategoryAgents(categories[1], [
-      agent("structured", {
-        description: "A complete crypto strategy service for BNB Chain users.",
-        raw_metadata: { offchain_content: { attributes: [{ trait_type: "Category", value: "grid-trading" }] } },
-      }),
-    ]);
-    expect(ranked[0].token_id).toBe("structured");
+    const ranked = rankCategoryAgents(category, Array.from({ length: 70 }, (_, index) => agent(String(index), { similarity_score: 0.8 })));
+    expect(ranked).toHaveLength(50);
   });
 
   it("uses trust and activity to reorder similarly relevant candidates", () => {

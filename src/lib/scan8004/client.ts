@@ -63,18 +63,13 @@ export async function searchBscAgents(query: string, limit = 10) {
   return request<ScanAgentPage>("/agents/search/semantic", params);
 }
 
-export async function searchBscAgentCategory(queries: string[], limit = 100, reviewedIds: string[] = []): Promise<ScanAgentPage> {
-  const perQueryLimit = Math.max(10, Math.ceil(limit / Math.max(queries.length, 1)));
-  const [pages, reviewed] = await Promise.all([
-    Promise.all(queries.map((query) => searchBscAgents(query, perQueryLimit))),
-    Promise.all(reviewedIds.map((tokenId) => getBscAgent(tokenId).catch(() => null))),
-  ]);
+export async function searchBscAgentCategory(queries: string[], limit = 100): Promise<ScanAgentPage> {
+  const pages = await Promise.all(queries.map((query) => searchBscAgents(query, limit)));
   const byToken = new Map<string, ScanAgentSummary>();
   for (const agent of pages.flatMap((page) => page.items)) {
     const existing = byToken.get(agent.token_id);
     if (!existing || (agent.similarity_score ?? 0) > (existing.similarity_score ?? 0)) byToken.set(agent.token_id, agent);
   }
-  for (const agent of reviewed.filter((item): item is ScanAgentDetail => Boolean(item))) byToken.set(agent.token_id, agent);
   const items = [...byToken.values()];
   return { items, total: items.length, limit, offset: 0 };
 }

@@ -19,7 +19,7 @@ export default async function AgentsPage({ searchParams }: { searchParams: Promi
   let items: ScanAgentSummary[];
   let total: number;
   if (category) {
-    const categoryPage = await searchBscAgentCategory(category.queries, 100, category.auditedIds);
+    const categoryPage = await searchBscAgentCategory(category.queries, 100);
     const matches = rankCategoryAgents(category, categoryPage.items);
     total = matches.length;
     items = matches.slice(offset, offset + pageSize);

@@ -12,7 +12,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const category = categories.find((item) => item.slug === slug);
   if (!category) notFound();
-  const page = await searchBscAgentCategory(category.queries, 100, category.auditedIds);
+  const page = await searchBscAgentCategory(category.queries, 100);
   const copy = getConsumerCategory(category.name);
   const ranked = rankCategoryAgents(category, page.items);
   const items = ranked.slice(0, CATEGORY_DISPLAY_DEPTH);
