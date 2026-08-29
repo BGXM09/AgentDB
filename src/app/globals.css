@@ -803,6 +803,44 @@ footer {
   box-shadow: none;
 }
 
+/* Quieter marketplace navigation */
+.site-header {
+  height: 64px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid #292929;
+  background: #090909;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.site-header .nav-wrap {
+  height: 63px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.site-header nav a {
+  height: 63px;
+  padding-inline: 14px;
+  color: #bdbdbd;
+}
+.site-header .brand {
+  color: #fff;
+}
+@media (max-width: 560px) {
+  .site-header {
+    height: 58px;
+    padding: 0;
+  }
+  .site-header .nav-wrap {
+    height: 57px;
+    padding: 0;
+  }
+}
+
 /* Sleek interior page system */
 .page-content {
   padding-top: 42px;
