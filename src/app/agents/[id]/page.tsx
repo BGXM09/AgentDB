@@ -56,11 +56,10 @@ export default async function AgentDetailPage({ params }: { params: Promise<{ id
   const similarHref = categorySlug(normalized.derived.category) ? `/agents?category=${categorySlug(normalized.derived.category)}` : "/agents";
 
   return <main className="container page-content agent-storefront">
-    <div className="breadcrumb"><Link href="/agents">Agents</Link><span>/</span>{categoryName}<span>/</span>{displayName}</div>
-
+    <div className="agent-profile-bento">
     <section className="agent-storefront-hero">
       <div className="agent-storefront-identity"><AgentAvatar imageUrl={agent.image_url} name={displayName} large /><div><span>{categoryName}</span><h1>{displayName}</h1><p>{agent.description || category.promise}</p></div></div>
-      <div className="agent-storefront-cta"><small>{canHire ? "Ready to take a task" : "Booking is not available yet"}</small>{canHire ? <Link className="primary-action" href={`/agents/${id}/hire`}>Start a task <b aria-hidden="true">→</b></Link> : <Link className="secondary-action" href={similarHref}>See similar agents</Link>}</div>
+      <div className="agent-storefront-cta"><small>{canHire ? "Ready when you are" : category.action}</small>{canHire ? <Link className="primary-action" href={`/agents/${id}/hire`}>Start a task</Link> : <Link className="secondary-action" href={similarHref}>Compare agents</Link>}</div>
     </section>
 
     <section className="agent-proof-strip" aria-label="Agent proof">
@@ -72,7 +71,7 @@ export default async function AgentDetailPage({ params }: { params: Promise<{ id
 
     <section className="agent-services-section">
       <div className="storefront-section-heading"><h2>What this agent can do for you</h2><p>Choose a service, review the result and price, then start the task.</p></div>
-      {services.length ? <div className="consumer-service-list">{services.map((service, index) => <article key={`${service.name}-${index}`}><div><h3>{service.name}</h3><p>{service.description}</p></div><dl><div><dt>You receive</dt><dd>{category.result}</dd></div><div><dt>Price</dt><dd>{consumerPrice(agent)}</dd></div><div><dt>Time</dt><dd>Confirmed with quote</dd></div></dl>{canHire ? <Link href={`/agents/${id}/hire`}>Use this service →</Link> : <span>Not bookable yet</span>}</article>)}</div> : <div className="service-empty"><h3>Nothing to book yet</h3><p>This agent has not published a clear service. Compare similar agents to find one that has.</p><Link href={similarHref}>Find another agent →</Link></div>}
+      {services.length ? <div className="consumer-service-list">{services.map((service, index) => <article key={`${service.name}-${index}`}><div><h3>{service.name}</h3><p>{service.description}</p></div><dl><div><dt>Result</dt><dd>{category.result}</dd></div><div><dt>Price</dt><dd>{consumerPrice(agent)}</dd></div><div><dt>Time</dt><dd>Confirmed with quote</dd></div></dl>{canHire && <Link href={`/agents/${id}/hire`}>Use this service</Link>}</article>)}</div> : <div className="service-empty"><h3>No services published</h3><p>Compare similar agents to find one with a clear service and result.</p><Link href={similarHref}>Find another agent</Link></div>}
     </section>
 
     <section className="agent-expectations"><div><h2>What comes back</h2><p>{category.result}</p></div><div><h2>What you provide</h2><p>{category.inputs}</p></div><div><h2>Why trust it</h2><p>{consumerTrust(agent)}</p></div></section>
@@ -80,5 +79,6 @@ export default async function AgentDetailPage({ params }: { params: Promise<{ id
     <section className="agent-reviews-section"><div><h2>{agent.total_feedbacks ? `${agent.total_feedbacks} onchain feedback ${agent.total_feedbacks === 1 ? "entry" : "entries"}` : "No customer reviews yet"}</h2><p>{agent.total_feedbacks ? `Average score: ${agent.average_score}/5` : "This is a new or unreviewed provider."}</p></div><p>{agent.total_feedbacks ? "These entries come from the wider ERC-8004 network. AgentDB has not independently verified that every entry came from a paid job." : "Start small, review the quote, and never grant permissions the task does not need."}</p></section>
 
     <details className="agent-technical-details"><summary>Onchain identity and technical details <span aria-hidden="true">+</span></summary><div><dl><div><dt>Agent ID</dt><dd>#{agent.token_id}</dd></div><div><dt>Owner</dt><dd><code>{agent.owner_address}</code></dd></div><div><dt>Identity registry</dt><dd><code>{agent.contract_address}</code></dd></div><div><dt>Created</dt><dd>{absoluteDate(agent.created_at)}</dd></div><div><dt>Protocols</dt><dd>{agent.supported_protocols?.join(", ") || "None declared"}</dd></div><div><dt>Registration</dt><dd>{txHash ? <a target="_blank" rel="noreferrer" href={`https://bscscan.com/tx/${txHash}`}>{short(txHash, 14, 10)}</a> : "Unavailable"}</dd></div></dl><Link href={`/agents/${id}/claim`}>Claim this agent</Link><details><summary>View raw record</summary><pre className="raw-record">{JSON.stringify(agent, null, 2)}</pre></details></div></details>
+    </div>
   </main>;
 }

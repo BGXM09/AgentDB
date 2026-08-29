@@ -1,5 +1,7 @@
 import type { AgentCategory } from "./types";
 
+export const CATEGORY_DISPLAY_DEPTH = 24;
+
 export const categories: Array<{ slug: string; name: AgentCategory; queries: string[]; description: string; auditedIds: string[] }> = [
   { slug: "rebalancing", name: "Rebalancing", queries: ["portfolio rebalancing and asset allocation", "LP liquidity range management", "automated DeFi portfolio management", "concentrated liquidity positions"], description: "Keep a portfolio or liquidity position close to the plan you chose.", auditedIds: ["265375", "293054", "45650"] },
   { slug: "grid-trading", name: "Grid Trading", queries: ["grid trading and limit orders", "automated crypto trading bot", "algorithmic market making", "DEX trading automation"], description: "Build or run a grid strategy around the market and limits you choose.", auditedIds: ["292939", "266234", "302258", "267697"] },

@@ -3952,3 +3952,388 @@ footer {
     gap: 24px;
   }
 }
+
+/* Marketplace contrast and focus corrections */
+.marketplace-agent-row:nth-child(6n + 3) .marketplace-agent-answers dd {
+  color: #f5f5f5;
+}
+.agent-storefront-hero .agent-storefront-identity span {
+  color: #595959;
+}
+.agent-proof-strip span,
+.agent-proof-strip small {
+  color: #b9b9b9;
+}
+.category-hero > a,
+.service-empty a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.marketplace-agent-action a:focus-visible,
+.agent-storefront-cta a:focus-visible,
+.consumer-service-list a:focus-visible,
+.service-empty a:focus-visible,
+.category-hero > a:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -6px;
+  box-shadow: 0 0 0 3px #121212;
+}
+
+/* Equal-depth marketplace bento */
+.breadcrumb {
+  display: none;
+}
+.site-header {
+  border: 0 !important;
+}
+.hero-band {
+  margin-top: -1px;
+  border-top: 0;
+}
+.job-picker > a > span {
+  align-self: start;
+  padding: 7px 9px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #d5d5d5;
+  font-size: 10px;
+  font-weight: 720;
+  white-space: nowrap;
+}
+.job-picker a:hover > span,
+.job-picker a.active > span {
+  border-color: #c8c8c8;
+  color: #121212;
+}
+.marketplace-page > .universal-search.compact {
+  margin-bottom: 32px;
+}
+.marketplace-agent-list {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 14px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.marketplace-agent-row {
+  grid-column: span 6;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 330px;
+  padding: 28px;
+  border: 0;
+  border-radius: 14px;
+  background: #f2f2f2;
+}
+.marketplace-agent-row:nth-child(6n + 1),
+.marketplace-agent-row:nth-child(6n + 6) {
+  grid-column: span 7;
+}
+.marketplace-agent-row:nth-child(6n + 2),
+.marketplace-agent-row:nth-child(6n + 5) {
+  grid-column: span 5;
+  background: #e8e8e8;
+}
+.marketplace-agent-row:nth-child(6n + 3) {
+  grid-column: span 4;
+  background: #121212;
+  color: #fff;
+}
+.marketplace-agent-row:nth-child(6n + 4) {
+  grid-column: span 8;
+}
+.marketplace-agent-row:nth-child(6n + 3) .marketplace-agent-category,
+.marketplace-agent-row:nth-child(6n + 3) .marketplace-agent-main p,
+.marketplace-agent-row:nth-child(6n + 3) .marketplace-agent-answers dt {
+  color: #aaa;
+}
+.marketplace-agent-main {
+  align-items: flex-start;
+}
+.marketplace-agent-main .agent-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+}
+.marketplace-agent-main h2 {
+  margin-top: 4px;
+  font-size: 22px;
+}
+.marketplace-agent-main p {
+  display: -webkit-box;
+  max-width: 54ch;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.marketplace-agent-answers {
+  display: grid;
+  grid-template-columns: .8fr .8fr 1.4fr;
+  gap: 18px;
+  margin-top: auto;
+}
+.marketplace-agent-answers div {
+  min-width: 0;
+}
+.marketplace-agent-action {
+  margin-top: 2px;
+}
+.marketplace-agent-action a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 15px;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+  border: 0;
+  border-radius: 0;
+  background: #121212;
+  color: #fff;
+  font-size: 12px;
+  transition: background 160ms ease, color 160ms ease;
+}
+.marketplace-agent-row:nth-child(6n + 3) .marketplace-agent-action a {
+  background: #fff;
+  color: #121212;
+}
+.marketplace-agent-action a:hover {
+  background: #313131;
+  color: #fff;
+  text-decoration: none;
+}
+.marketplace-agent-action a b {
+  opacity: .58;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+/* Agent profile bento */
+.agent-storefront {
+  padding-top: 28px;
+}
+.agent-profile-bento {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 14px;
+  padding-bottom: 72px;
+}
+.agent-storefront-hero {
+  grid-column: span 8;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  min-height: 430px;
+  padding: 38px;
+  border-radius: 14px;
+  background: #f1f1f1;
+}
+.agent-storefront-identity {
+  flex-direction: column;
+}
+.agent-storefront-identity p {
+  max-width: 620px;
+}
+.agent-storefront-cta {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  width: 100%;
+}
+.agent-storefront-cta small {
+  text-align: left;
+}
+.agent-storefront-cta .primary-action,
+.agent-storefront-cta .secondary-action,
+.consumer-service-list > article > a,
+.service-empty a,
+.category-hero > a {
+  min-height: 46px;
+  padding: 0 16px;
+  clip-path: polygon(0 0, calc(100% - 11px) 0, 100% 11px, 100% 100%, 0 100%);
+  border: 0;
+  border-radius: 0;
+  background: #121212;
+  color: #fff;
+}
+.agent-storefront-cta .secondary-action {
+  display: flex;
+  align-items: center;
+}
+.agent-proof-strip {
+  grid-column: span 4;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  border: 0;
+  border-radius: 14px;
+  background: #121212;
+  color: #fff;
+}
+.agent-proof-strip > div {
+  min-height: 0;
+  padding: 24px;
+  border-right: 1px solid #333;
+  border-bottom: 1px solid #333;
+}
+.agent-proof-strip > div:nth-child(2n) {
+  border-right: 0;
+}
+.agent-proof-strip > div:nth-child(n + 3) {
+  border-bottom: 0;
+}
+.agent-proof-strip b {
+  margin-top: auto;
+  color: #fff;
+  font-size: 16px;
+}
+.agent-services-section {
+  grid-column: 1 / -1;
+  padding: 42px;
+  border-radius: 14px;
+  background: #f6f6f6;
+}
+.consumer-service-list {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 14px;
+  border: 0;
+}
+.consumer-service-list article {
+  grid-column: span 6;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
+  min-height: 300px;
+  padding: 28px;
+  border: 0;
+  border-radius: 12px;
+  background: #fff;
+}
+.consumer-service-list article:nth-child(3n + 1) {
+  grid-column: span 7;
+}
+.consumer-service-list article:nth-child(3n + 2) {
+  grid-column: span 5;
+  background: #e7e7e7;
+}
+.consumer-service-list dl {
+  margin-top: auto;
+}
+.consumer-service-list > article > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-width: 150px;
+  text-align: center;
+}
+.agent-expectations {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 14px;
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+}
+.agent-expectations > div {
+  border: 0;
+  border-radius: 14px;
+  background: #121212;
+}
+.agent-expectations > div:nth-child(2) {
+  background: #242424;
+}
+.agent-reviews-section {
+  grid-column: span 7;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 50px;
+  min-height: 300px;
+  padding: 34px;
+  border: 0;
+  border-radius: 14px;
+  background: #e9e9e9;
+}
+.agent-technical-details {
+  grid-column: span 5;
+  margin: 0;
+  padding: 10px 30px;
+  border: 0;
+  border-radius: 14px;
+  background: #f5f5f5;
+}
+.agent-technical-details dl {
+  grid-template-columns: 1fr;
+}
+.agent-technical-details dl > div {
+  grid-template-columns: 100px 1fr;
+}
+
+@media (max-width: 900px) {
+  .marketplace-agent-row,
+  .marketplace-agent-row:nth-child(n),
+  .agent-storefront-hero,
+  .agent-proof-strip,
+  .agent-reviews-section,
+  .agent-technical-details {
+    grid-column: 1 / -1;
+  }
+  .agent-storefront-hero {
+    min-height: 390px;
+  }
+  .consumer-service-list article,
+  .consumer-service-list article:nth-child(n) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 620px) {
+  .marketplace-agent-list {
+    grid-template-columns: 1fr;
+  }
+  .marketplace-agent-row,
+  .marketplace-agent-row:nth-child(n) {
+    grid-column: 1;
+    min-height: 360px;
+    padding: 22px;
+  }
+  .marketplace-agent-answers {
+    grid-template-columns: 1fr 1fr;
+  }
+  .marketplace-agent-answers > div:last-child {
+    grid-column: 1 / -1;
+  }
+  .agent-profile-bento {
+    grid-template-columns: 1fr;
+  }
+  .agent-profile-bento > *,
+  .consumer-service-list article,
+  .consumer-service-list article:nth-child(n) {
+    grid-column: 1;
+  }
+  .agent-storefront-hero,
+  .agent-services-section {
+    padding: 26px;
+  }
+  .agent-storefront-cta {
+    grid-template-columns: 1fr;
+  }
+  .agent-proof-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+  .agent-expectations {
+    grid-template-columns: 1fr;
+  }
+  .agent-expectations > div,
+  .agent-expectations > div:last-child {
+    grid-column: 1;
+  }
+}
