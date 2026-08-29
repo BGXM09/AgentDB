@@ -1,4 +1,4 @@
-import type { ScanAgentDetail, ScanAgentPage } from "@/lib/agents/types";
+import type { ScanAgentDetail, ScanAgentPage, ScanAgentSummary } from "@/lib/agents/types";
 
 const BASE_URL = "https://api.8004scan.io/api/v1";
 
@@ -64,13 +64,19 @@ export async function searchBscAgents(query: string, limit = 10) {
 }
 
 export async function searchBscAgentCategory(queries: string[], limit = 100, reviewedIds: string[] = []): Promise<ScanAgentPage> {
-  const query = queries.join("; ");
-  const [page, ...reviewed] = await Promise.all([
-    searchBscAgents(query, limit),
-    ...reviewedIds.map((tokenId) => getBscAgent(tokenId).catch(() => null)),
+  const perQueryLimit = Math.max(10, Math.ceil(limit / Math.max(queries.length, 1)));
+  const [pages, reviewed] = await Promise.all([
+    Promise.all(queries.map((query) => searchBscAgents(query, perQueryLimit))),
+    Promise.all(reviewedIds.map((tokenId) => getBscAgent(tokenId).catch(() => null))),
   ]);
-  const items = [...new Map([...reviewed.filter((agent): agent is ScanAgentDetail => Boolean(agent)), ...page.items].map((agent) => [agent.token_id, agent])).values()];
-  return { ...page, items, total: items.length };
+  const byToken = new Map<string, ScanAgentSummary>();
+  for (const agent of pages.flatMap((page) => page.items)) {
+    const existing = byToken.get(agent.token_id);
+    if (!existing || (agent.similarity_score ?? 0) > (existing.similarity_score ?? 0)) byToken.set(agent.token_id, agent);
+  }
+  for (const agent of reviewed.filter((item): item is ScanAgentDetail => Boolean(item))) byToken.set(agent.token_id, agent);
+  const items = [...byToken.values()];
+  return { items, total: items.length, limit, offset: 0 };
 }
 
 export async function getBscAgent(tokenId: string) {

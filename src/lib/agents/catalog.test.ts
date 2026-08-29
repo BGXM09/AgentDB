@@ -49,11 +49,23 @@ describe("rankCategoryAgents", () => {
     expect(ranked.map((item) => item.token_id)).toEqual(["useful"]);
   });
 
-  it("rejects semantically returned candidates without category evidence", () => {
+  it("rejects candidates without category or semantic evidence", () => {
     const ranked = rankCategoryAgents(category, [
-      agent("unrelated", { description: "A complete service for writing and translating marketing content.", similarity_score: 0.79 }),
+      agent("unrelated", { description: "A complete service for writing and translating marketing content." }),
     ]);
     expect(ranked).toEqual([]);
+  });
+
+  it("uses semantic candidates to backfill the curated category", () => {
+    const ranked = rankCategoryAgents(category, [
+      agent("semantic", { description: "A complete service for managing assets according to user instructions.", similarity_score: 0.79 }),
+    ]);
+    expect(ranked[0].token_id).toBe("semantic");
+  });
+
+  it("caps every category at the shared display depth", () => {
+    const ranked = rankCategoryAgents(category, Array.from({ length: 20 }, (_, index) => agent(String(index), { similarity_score: 0.8 })));
+    expect(ranked).toHaveLength(12);
   });
 
   it("accepts structured category evidence from raw agent metadata", () => {

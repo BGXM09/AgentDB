@@ -1,7 +1,7 @@
 import type { AgentCategory, ScanAgentSummary } from "./types";
 import { classifyConsumerCategories } from "./classifier";
 
-export const CATEGORY_DISPLAY_DEPTH = 24;
+export const CATEGORY_DISPLAY_DEPTH = 12;
 
 export const categories: Array<{ slug: string; name: AgentCategory; queries: string[]; description: string; auditedIds: string[]; art: string }> = [
   { slug: "rebalancing", name: "Rebalancing", queries: ["portfolio rebalancing and asset allocation", "LP liquidity range management", "automated DeFi portfolio management", "concentrated liquidity positions"], description: "Keep a portfolio or liquidity position close to the plan you chose.", auditedIds: ["265375", "293054", "45650"], art: "/media/categories/rebalancing.jpg" },
@@ -45,7 +45,7 @@ function categoryRank(category: (typeof categories)[number], agent: ScanAgentSum
     + validationTrust * 6
     + indexedQuality * 6
     + indexedActivity * 4
-    + Math.min(evidenceCount, 3) * 4
+    + Math.min(evidenceCount, 3) * 16
     + serviceEvidence * 2
     - Number(agent.is_active === false) * 20;
 }
@@ -55,15 +55,29 @@ export function rankCategoryAgents(category: (typeof categories)[number], agents
   const qualified = unique.flatMap((agent) => {
     const classification = classifyConsumerCategories(agent).find((item) => item.category === category.name);
     const audited = category.auditedIds.includes(agent.token_id);
+    const semanticCandidate = typeof agent.similarity_score === "number";
     if (!hasUsefulProfile(agent) && !audited) return [];
-    if (!classification && !audited) return [];
+    if (!classification && !audited && !semanticCandidate) return [];
     return [{ agent, evidenceCount: classification?.evidence.length ?? 0 }];
   });
 
-  return qualified
+  const scored = qualified
     .map(({ agent, evidenceCount }, semanticRank) => ({ agent, score: categoryRank(category, agent, semanticRank, evidenceCount) }))
-    .sort((a, b) => b.score - a.score || b.agent.total_score - a.agent.total_score)
-    .map(({ agent }) => agent);
+    .sort((a, b) => b.score - a.score || b.agent.total_score - a.agent.total_score);
+
+  const seenNames = new Set<string>();
+  const diverse: typeof scored = [];
+  const repeated: typeof scored = [];
+  for (const candidate of scored) {
+    const name = candidate.agent.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, " ");
+    if (name && seenNames.has(name)) repeated.push(candidate);
+    else {
+      if (name) seenNames.add(name);
+      diverse.push(candidate);
+    }
+  }
+
+  return [...diverse, ...repeated].slice(0, CATEGORY_DISPLAY_DEPTH).map(({ agent }) => agent);
 }
 
 export const auditedAgentIds = ["265375", "293054", "45650", "292939", "266234", "302258", "267697", "267698", "3416", "133221", "292058", "179543"];
