@@ -69,6 +69,16 @@ describe("rankCategoryAgents", () => {
     expect(ranked).toHaveLength(50);
   });
 
+  it("keeps only the strongest semantic match for duplicate normalized names", () => {
+    const ranked = rankCategoryAgents(category, [
+      agent("first", { name: "Portfolio Pilot.agent", similarity_score: 0.81 }),
+      agent("second", { name: "portfolio-pilot", similarity_score: 0.92 }),
+      agent("third", { name: "PORTFOLIO PILOT #123", similarity_score: 0.75 }),
+    ]);
+    expect(ranked).toHaveLength(1);
+    expect(ranked[0].token_id).toBe("second");
+  });
+
   it("uses trust and activity to reorder similarly relevant candidates", () => {
     const ranked = rankCategoryAgents(category, [
       agent("plain"),

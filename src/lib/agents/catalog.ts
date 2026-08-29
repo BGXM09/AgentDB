@@ -4,7 +4,7 @@ export const CATEGORY_DISPLAY_DEPTH = 50;
 
 export const categories: Array<{ slug: string; name: AgentCategory; queries: string[]; description: string; auditedIds: string[]; art: string }> = [
   { slug: "rebalancing", name: "Rebalancing", queries: ["portfolio rebalancing and asset allocation", "LP liquidity range management", "automated DeFi portfolio management", "concentrated liquidity positions", "crypto portfolio management", "DeFi liquidity management", "automated asset allocation", "portfolio allocation agent"], description: "Keep a portfolio or liquidity position close to the plan you chose.", auditedIds: ["265375", "293054", "45650"], art: "/media/categories/rebalancing.jpg" },
-  { slug: "grid-trading", name: "Grid Trading", queries: ["grid trading and limit orders", "automated crypto trading bot", "algorithmic market making", "DEX trading automation"], description: "Build or run a grid strategy around the market and limits you choose.", auditedIds: ["292939", "266234", "302258", "267697"], art: "/media/categories/grid-trading.jpg" },
+  { slug: "grid-trading", name: "Grid Trading", queries: ["grid trading and limit orders", "automated crypto trading bot", "algorithmic market making", "DEX trading automation", "crypto limit order agent", "automated market maker agent", "spot trading strategy", "crypto arbitrage bot", "DEX execution agent", "technical trading analysis", "range trading strategy", "automated trading signals"], description: "Build or run a grid strategy around the market and limits you choose.", auditedIds: ["292939", "266234", "302258", "267697"], art: "/media/categories/grid-trading.jpg" },
   { slug: "yield-optimisation", name: "Yield Optimisation", queries: ["DeFi yield optimisation and farming", "staking and liquidity rewards", "vault APY opportunities", "lending yield and passive returns", "DeFi yield opportunities", "crypto staking agent", "liquidity mining rewards", "DeFi lending returns", "automated vault strategy"], description: "Compare ways to put idle assets to work at a risk level you accept.", auditedIds: ["267698", "3416", "133221"], art: "/media/categories/yield-optimisation.jpg" },
   { slug: "health-factor-monitoring", name: "Health Factor Monitoring", queries: ["DeFi position risk monitoring", "lending liquidation alerts", "collateral and leverage risk", "loan health monitoring", "DeFi risk monitoring", "lending collateral management", "liquidation protection", "portfolio risk alerts", "wallet position monitoring", "DeFi security alerts", "crypto risk analysis", "DeFi lending agent", "collateral analytics", "portfolio monitoring", "financial risk alerts", "asset risk monitoring"], description: "Watch a lending position and warn you before liquidation risk gets too close.", auditedIds: ["292058", "179543"], art: "/media/categories/health-monitoring.jpg" },
 ];
@@ -13,6 +13,16 @@ function hasUsefulProfile(agent: ScanAgentSummary) {
   const name = agent.name?.trim();
   const description = agent.description?.trim();
   return Boolean(name && description && description.length >= 24);
+}
+
+function normalizedAgentName(name: string) {
+  return name
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/\.agent\b/g, "")
+    .replace(/(?:agent\s*)?#?\d+$/g, "")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim();
 }
 
 function categoryRank(agent: ScanAgentSummary, semanticRank: number) {
@@ -55,17 +65,14 @@ export function rankCategoryAgents(_category: (typeof categories)[number], agent
 
   const seenNames = new Set<string>();
   const diverse: typeof scored = [];
-  const repeated: typeof scored = [];
   for (const candidate of scored) {
-    const name = candidate.agent.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, " ");
-    if (name && seenNames.has(name)) repeated.push(candidate);
-    else {
-      if (name) seenNames.add(name);
-      diverse.push(candidate);
-    }
+    const name = normalizedAgentName(candidate.agent.name);
+    if (name && seenNames.has(name)) continue;
+    if (name) seenNames.add(name);
+    diverse.push(candidate);
   }
 
-  return [...diverse, ...repeated].slice(0, CATEGORY_DISPLAY_DEPTH).map(({ agent }) => agent);
+  return diverse.slice(0, CATEGORY_DISPLAY_DEPTH).map(({ agent }) => agent);
 }
 
 export const auditedAgentIds = ["265375", "293054", "45650", "292939", "266234", "302258", "267697", "267698", "3416", "133221", "292058", "179543"];
