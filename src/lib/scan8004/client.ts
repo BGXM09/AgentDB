@@ -32,12 +32,16 @@ async function request<T>(path: string, params?: URLSearchParams): Promise<T> {
   throw lastError instanceof Error ? lastError : new Scan8004Error("8004scan request failed.");
 }
 
-export async function listBscAgents(options: { limit?: number; offset?: number } = {}) {
+export async function listBscAgents(options: { limit?: number; offset?: number; sortBy?: "total_score" | "created_at" | "total_feedbacks"; minFeedbacks?: number; hasA2a?: boolean } = {}) {
   const params = new URLSearchParams({
     chain_id: "56",
     limit: String(Math.min(options.limit ?? 10, 50)),
     offset: String(Math.max(options.offset ?? 0, 0)),
+    sort_by: options.sortBy ?? "total_score",
+    sort_order: "desc",
   });
+  if (options.minFeedbacks) params.set("min_feedbacks", String(options.minFeedbacks));
+  if (options.hasA2a) params.set("has_a2a", "true");
   return request<ScanAgentPage>("/agents", params);
 }
 
