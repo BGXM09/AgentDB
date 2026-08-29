@@ -3344,3 +3344,12 @@ footer {
   .loading-line,
   .loading-row { animation: none; }
 }
+
+/* Navbar and hero share one surface — no darker navigation band. */
+.site-header,
+.hero-band {
+  background-color: var(--hero-blue);
+}
+.site-header {
+  border-bottom-color: transparent;
+}
