@@ -1487,6 +1487,13 @@ body .site-header .wordmark-db {
   font-weight: 650;
   line-height: 1.45;
 }
+.marketplace-agent-answers small {
+  display: block;
+  margin-top: 4px;
+  color: #6a6a6a;
+  font-size: 10px;
+  line-height: 1.4;
+}
 .marketplace-agent-action a {
   display: inline-flex;
   min-height: 40px;
@@ -4086,6 +4093,7 @@ footer {
 }
 .marketplace-agent-answers {
   align-self: center;
+  grid-template-columns: minmax(180px, 1.4fr) minmax(150px, 1fr);
   margin: 0;
 }
 

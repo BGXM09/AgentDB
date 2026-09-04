@@ -45,7 +45,7 @@ export default async function AgentsPage({ searchParams }: { searchParams: Promi
       {categories.map((item) => { const copy = getConsumerCategory(item.name); return <Link className={category?.slug === item.slug ? "active" : ""} href={`/agents?category=${item.slug}`} key={item.slug}><div><b>{copy.action}</b><small>{copy.promise}</small></div></Link>; })}
     </nav>
     <SearchBox compact />
-    <div className="marketplace-results-heading"><h2>{category ? `${category.name} agents` : "All agents"}</h2><span>Showing {first.toLocaleString()}–{last.toLocaleString()} of {total.toLocaleString()}</span></div>
+    <div className="marketplace-results-heading"><h2>{category ? `${category.name} agents` : "Published agents"}</h2><span>{first.toLocaleString()}–{last.toLocaleString()} of {total.toLocaleString()}</span></div>
     <MarketplaceAgentList agents={items as ScanAgentDetail[]} />
     {total > pageSize && <nav className="pagination" aria-label="Agent results pages"><Link aria-disabled={offset === 0} href={pageHref(Math.max(0, offset - pageSize))}>Previous</Link><span>Page {Math.floor(offset / pageSize) + 1}</span><Link aria-disabled={last >= total} href={pageHref(offset + pageSize)}>Next</Link></nav>}
   </main>;

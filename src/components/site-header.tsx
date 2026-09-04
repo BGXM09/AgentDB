@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { WalletControl } from "./wallet-control";
 import { BackgroundShapes } from "./ui/background-shapes";
 
 export function SiteHeader() {
@@ -18,7 +17,6 @@ export function SiteHeader() {
           <Link href="/activity">Activity</Link>
           <Link href="/leaderboard">Leaderboard</Link>
         </nav>
-        <WalletControl />
       </div>
     </header>
   );

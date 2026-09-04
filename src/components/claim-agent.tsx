@@ -1,20 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import { useConnection, useSignMessage, useSwitchChain } from "wagmi";
+import { useRef, useState } from "react";
+import { useConnect, useConnection, useSignMessage, useSwitchChain } from "wagmi";
 import { bsc } from "wagmi/chains";
 
 type State = { tone: "info" | "success" | "warning"; message: string } | null;
 
 export function ClaimAgent({ agentId }: { agentId: string }) {
   const connection = useConnection();
+  const connect = useConnect();
   const signer = useSignMessage();
   const switcher = useSwitchChain();
+  const dialog = useRef<HTMLDialogElement>(null);
   const [state, setState] = useState<State>(null);
   const [pending, setPending] = useState(false);
 
   async function claim() {
-    if (!connection.address) return setState({ tone: "warning", message: "Connect the wallet that owns this ERC-8004 identity." });
+    if (!connection.address) return dialog.current?.showModal();
     if (connection.chainId !== bsc.id) { switcher.switchChain({ chainId: bsc.id }); return; }
     setPending(true); setState({ tone: "info", message: "Verifying ownership on BNB Smart Chain…" });
     try {
@@ -31,5 +33,11 @@ export function ClaimAgent({ agentId }: { agentId: string }) {
     finally { setPending(false); }
   }
 
-  return <section className="panel claim-panel"><div className="panel-title"><h2>Claim this Agent</h2><span>Owner-only</span></div><div className="claim-body"><p>Prove control of the current ERC-8004 owner wallet to manage AgentDB enrichment. No private key is requested and no transaction is sent.</p><button className="primary-action" disabled={pending} onClick={claim}>{pending ? "Verifying…" : connection.isConnected ? "Verify & Claim" : "Connect Wallet to Claim"}</button>{state && <div className={`notice ${state.tone === "success" ? "success-notice" : state.tone === "warning" ? "warning-notice" : "info-notice"}`}>{state.message}</div>}</div></section>;
+  async function connectWallet() {
+    const connector = connect.connectors[0];
+    if (!connector) return;
+    connect.connect({ connector }, { onSuccess: () => dialog.current?.close() });
+  }
+
+  return <section className="panel claim-panel"><div className="panel-title"><h2>Claim this Agent</h2><span>Owner-only</span></div><div className="claim-body"><p>Prove control of the current ERC-8004 owner wallet to manage AgentDB enrichment. No private key is requested and no transaction is sent.</p><button className="primary-action" disabled={pending} onClick={claim}>{pending ? "Verifying…" : connection.isConnected ? "Verify & Claim" : "Claim this agent"}</button>{state && <div className={`notice ${state.tone === "success" ? "success-notice" : state.tone === "warning" ? "warning-notice" : "info-notice"}`}>{state.message}</div>}</div><dialog className="wallet-required-dialog" ref={dialog} onClick={(event) => { if (event.target === dialog.current) dialog.current.close(); }}><div><button className="wallet-dialog-close" aria-label="Close wallet prompt" onClick={() => dialog.current?.close()}>×</button><h2>Connect the owner wallet</h2><p>AgentDB only asks for your wallet here because claiming requires proof that you own this onchain identity.</p><button className="primary-action" disabled={!connect.connectors.length || connect.isPending} onClick={connectWallet}>{connect.isPending ? "Connecting…" : "Connect wallet"}</button>{connect.error && <p className="wallet-dialog-error">{connect.error.message}</p>}<small>Connecting does not send a transaction.</small></div></dialog></section>;
 }
