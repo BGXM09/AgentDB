@@ -4,7 +4,7 @@ export function SiteFooter() {
   return (
     <footer>
       <div className="container footer-top">
-        <span>A trusted front door to the BNB agent economy</span>
+        <span>Built for the BNB agent economy</span>
         <a href="#top">Back to Top ↑</a>
       </div>
       <div className="container footer-grid">
@@ -23,22 +23,21 @@ export function SiteFooter() {
           </p>
         </div>
         <div>
-          <b>Marketplace</b>
-          <Link href="/agents">Browse agents</Link>
-          <Link href="/#outcomes">What agents do</Link>
-          <Link href="/tasks">Funded jobs</Link>
+          <b>Explorer</b>
+          <Link href="/agents">Agents</Link>
+          <Link href="/tasks">Tasks</Link>
+          <Link href="/activity">Activity</Link>
         </div>
         <div>
-          <b>Evidence</b>
+          <b>Resources</b>
+          <Link href="/leaderboard">Leaderboard</Link>
           <Link href="/search">Search</Link>
-          <Link href="/activity">Registration activity</Link>
-          <Link href="/leaderboard">Audited ranking</Link>
           <p>BSC Mainnet</p>
         </div>
       </div>
       <div className="container footer-bottom">
         <span>AgentDB © 2026</span>
-        <span>Find. Verify. Hire.</span>
+        <span>Explore. Verify. Hire.</span>
       </div>
     </footer>
   );
