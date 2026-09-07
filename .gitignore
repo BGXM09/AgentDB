@@ -5,3 +5,5 @@ node_modules/
 out/
 *.log
 *.tsbuildinfo
+test-results/
+playwright-report/

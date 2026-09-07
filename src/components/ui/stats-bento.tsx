@@ -2,11 +2,10 @@ import Link from "next/link";
 import { categories } from "@/lib/agents/catalog";
 
 interface StatsBentoProps {
-  indexedAgents: number;
-  categoryCounts: Record<string, number>;
+  indexedAgents: number | null;
 }
 
-export const StatsBento = ({ indexedAgents, categoryCounts }: StatsBentoProps) => {
+export const StatsBento = ({ indexedAgents }: StatsBentoProps) => {
   return (
     <section className="stats-bento" aria-label="Explore AgentDB">
       <Link className="stats-bento-primary" href="/agents">
@@ -15,14 +14,14 @@ export const StatsBento = ({ indexedAgents, categoryCounts }: StatsBentoProps) =
         </video>
         <span className="bento-ascii-veil" aria-hidden="true" />
         <span className="stats-bento-label inverted">Browse all agents</span>
-        <h2>{indexedAgents.toLocaleString()}</h2>
+        <h2>{indexedAgents === null ? "Explore" : indexedAgents.toLocaleString()}</h2>
         <strong>Indexed agents</strong>
       </Link>
 
       {categories.map((category) => (
         <Link className="stats-bento-category" href={`/categories/${category.slug}`} key={category.slug}>
           <img className={`category-image category-image-${category.slug}`} src={category.art} alt="" aria-hidden="true" />
-          <span className="stats-bento-label">{categoryCounts[category.slug].toLocaleString()} curated matches</span>
+          <span className="stats-bento-label">Explore agents</span>
           <strong>{category.name}</strong>
         </Link>
       ))}

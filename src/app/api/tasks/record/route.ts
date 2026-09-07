@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { BNB, ERC8183_ADDRESSES, getErc8183Job } from "@altananetwork/sdk";
 import { isAddress, isHex } from "viem";
 import { createServiceSupabase } from "@/lib/supabase/server";
+import { getBscAgent } from "@/lib/scan8004/client";
 
 type Input = {
   jobId?: string;
@@ -22,6 +23,10 @@ export async function POST(request: Request) {
     if (!isAddress(input.clientAddress) || !isAddress(input.providerAddress) || !isAddress(input.paymentToken) || !isHex(input.callsId) || (input.transactionHash && !isHex(input.transactionHash))) return NextResponse.json({ error: "Invalid task record fields." }, { status: 400 });
     if (input.paymentToken.toLowerCase() !== ERC8183_ADDRESSES[56].paymentToken.toLowerCase()) return NextResponse.json({ error: "Unsupported payment token." }, { status: 400 });
 
+    if (!/^\d+$/.test(input.agentId) || input.taskDescription.length > 64_000) return NextResponse.json({ error: "Invalid agent ID or task description." }, { status: 400 });
+    const agent = await getBscAgent(input.agentId);
+    const provider = typeof agent.agent_wallet === "string" ? agent.agent_wallet : agent.owner_address;
+    if (provider.toLowerCase() !== input.providerAddress.toLowerCase()) return NextResponse.json({ error: "The provider does not match this agent’s registered wallet." }, { status: 409 });
     const job = await getErc8183Job(BNB, BigInt(input.jobId));
     if (job.client.toLowerCase() !== input.clientAddress.toLowerCase() || job.provider.toLowerCase() !== input.providerAddress.toLowerCase() || job.budget.toString() !== input.budget || job.description !== input.taskDescription) return NextResponse.json({ error: "Onchain job does not match the submitted task." }, { status: 409 });
     if (job.statusName !== "FUNDED" && job.statusName !== "SUBMITTED" && job.statusName !== "COMPLETED") return NextResponse.json({ error: `Job is ${job.statusName}, not funded.` }, { status: 409 });

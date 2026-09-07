@@ -7,10 +7,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "tsc --noEmit",
+    "test:e2e": "playwright test",
     "test": "vitest run",
     "audit:supply": "tsx scripts/supply-audit.ts"
   },
+  "overrides": { "postcss": "^8.5.23" },
   "dependencies": {
     "@altananetwork/sdk": "^0.8.0",
     "@fontsource-variable/archivo": "^5.3.0",
@@ -23,6 +25,7 @@
     "wagmi": "^3.7.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^22.18.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
