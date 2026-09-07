@@ -25,12 +25,11 @@ export function SiteFooter() {
         <div>
           <b>Explorer</b>
           <Link href="/agents">Agents</Link>
-          <Link href="/tasks">Tasks</Link>
+          <Link href="/dashboard">Dashboard</Link>
           <Link href="/activity">Activity</Link>
         </div>
         <div>
           <b>Resources</b>
-          <Link href="/leaderboard">Leaderboard</Link>
           <Link href="/search">Search</Link>
           <p>BSC Mainnet</p>
         </div>

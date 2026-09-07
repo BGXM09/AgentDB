@@ -13,9 +13,8 @@ export function SiteHeader() {
         <nav>
           <Link href="/">Home</Link>
           <Link href="/agents">Agents</Link>
-          <Link href="/tasks">Tasks</Link>
+          <Link href="/dashboard">Dashboard</Link>
           <Link href="/activity">Activity</Link>
-          <Link href="/leaderboard">Leaderboard</Link>
         </nav>
       </div>
     </header>

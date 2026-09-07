@@ -7,6 +7,7 @@ import "./globals.css";
 import "./wallet.css";
 import "./altana.css";
 import "./interior.css";
+import "./dashboard.css";
 
 export const metadata: Metadata = { title: "AgentDB", description: "Explore. Verify. Hire." };
 
