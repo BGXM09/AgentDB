@@ -25,6 +25,5 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     </section>
     <div className="marketplace-results-heading"><h2>Best matches</h2><span>Showing {items.length.toLocaleString()} of {ranked.length.toLocaleString()}</span></div>
     <MarketplaceAgentList agents={items}/>
-    {ranked.length > items.length && <nav className="pagination" aria-label="More category results"><Link href={`/agents?category=${category.slug}&offset=${items.length}`}>More {category.name.toLowerCase()} agents</Link></nav>}
   </main>;
 }

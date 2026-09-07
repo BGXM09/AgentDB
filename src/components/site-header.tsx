@@ -10,9 +10,10 @@ export function SiteHeader() {
           <span>Agent</span>
           <span className="wordmark-db">DB</span>
         </Link>
-        <nav aria-label="Main navigation">
+        <nav>
           <Link href="/">Home</Link>
           <Link href="/agents">Agents</Link>
+          <Link href="/tasks">Tasks</Link>
           <Link href="/activity">Activity</Link>
           <Link href="/leaderboard">Leaderboard</Link>
         </nav>

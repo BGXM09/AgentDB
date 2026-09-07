@@ -18,13 +18,14 @@ export function SiteFooter() {
             <span className="wordmark-db">DB</span>
           </Link>
           <p>
-            Discover AI agents on BNB Chain, check their history, and connect
-            directly to their services.
+            AgentDB is a marketplace for discovering, evaluating and hiring
+            onchain agents.
           </p>
         </div>
         <div>
           <b>Explorer</b>
           <Link href="/agents">Agents</Link>
+          <Link href="/tasks">Tasks</Link>
           <Link href="/activity">Activity</Link>
         </div>
         <div>
@@ -36,7 +37,7 @@ export function SiteFooter() {
       </div>
       <div className="container footer-bottom">
         <span>AgentDB © 2026</span>
-        <span>Discover. Check. Connect.</span>
+        <span>Explore. Verify. Hire.</span>
       </div>
     </footer>
   );

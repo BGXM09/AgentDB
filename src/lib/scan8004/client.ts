@@ -8,17 +8,16 @@ export class Scan8004Error extends Error {
   }
 }
 
-async function request<T>(path: string, params?: URLSearchParams, options: { attempts?: number; timeout?: number } = {}): Promise<T> {
+async function request<T>(path: string, params?: URLSearchParams): Promise<T> {
   const apiKey = process.env.SCAN8004_API_KEY;
   if (!apiKey) throw new Scan8004Error("8004scan is not configured.");
   const url = `${BASE_URL}${path}${params?.size ? `?${params}` : ""}`;
   let lastError: unknown;
-  for (let attempt = 0; attempt < (options.attempts ?? 3); attempt += 1) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
       const response = await fetch(url, {
         headers: { "X-API-Key": apiKey, Accept: "application/json" },
-        next: { revalidate: path.includes("/search/") ? 300 : 30 },
-        signal: AbortSignal.timeout(options.timeout ?? 12_000),
+        next: { revalidate: 15 },
       });
       if (response.ok) return await response.json() as T;
       if (response.status !== 429 && response.status < 500) {
@@ -26,7 +25,6 @@ async function request<T>(path: string, params?: URLSearchParams, options: { att
       }
       lastError = new Scan8004Error(`8004scan temporarily unavailable (${response.status}).`, response.status);
     } catch (error) {
-      if (error instanceof Scan8004Error && error.status && error.status < 500 && error.status !== 429) throw error;
       lastError = error;
     }
     await new Promise((resolve) => setTimeout(resolve, 250 * 2 ** attempt));
@@ -61,27 +59,12 @@ export async function listPopularBscAgents(limit = 10) {
 }
 
 export async function searchBscAgents(query: string, limit = 10) {
-  const trimmed = query.trim().slice(0, 500);
-  // Names, IDs and wallet addresses use the provider's deterministic search.
-  // Natural-language intent can use semantic search, with a bounded fallback.
-  if (trimmed.split(/\s+/).length > 2) {
-    try { return await semanticSearch(trimmed, limit); } catch { /* Fall back to indexed text search. */ }
-  }
-  return keywordSearch(trimmed, limit);
-}
-
-function keywordSearch(query: string, limit: number) {
-  return request<ScanAgentPage>("/agents", new URLSearchParams({ search: query, chain_id: "56", limit: String(Math.min(limit, 50)), sort_by: "total_score", sort_order: "desc" }));
-}
-
-function semanticSearch(query: string, limit: number) {
-  return request<ScanAgentPage>("/agents/search/semantic", new URLSearchParams({ q: query, chain_id: "56", limit: String(Math.min(limit, 100)) }), { attempts: 1, timeout: 8_000 });
+  const params = new URLSearchParams({ q: query, chain_id: "56", limit: String(Math.min(limit, 100)) });
+  return request<ScanAgentPage>("/agents/search/semantic", params);
 }
 
 export async function searchBscAgentCategory(queries: string[], limit = 100): Promise<ScanAgentPage> {
-  const results = await Promise.allSettled(queries.map((query) => semanticSearch(query, limit)));
-  const pages = results.flatMap((result) => result.status === "fulfilled" ? [result.value] : []);
-  if (!pages.length) pages.push(await keywordSearch(queries[0].split(" and ")[0], limit));
+  const pages = await Promise.all(queries.map((query) => searchBscAgents(query, limit)));
   const byToken = new Map<string, ScanAgentSummary>();
   for (const agent of pages.flatMap((page) => page.items)) {
     const existing = byToken.get(agent.token_id);

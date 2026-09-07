@@ -7,9 +7,8 @@ import "./globals.css";
 import "./wallet.css";
 import "./altana.css";
 import "./interior.css";
-import "./refinements.css";
 
-export const metadata: Metadata = { title: "AgentDB — Discover & connect to onchain agents", description: "Find AI agents on BNB Chain, inspect their onchain history, and connect directly to published services." };
+export const metadata: Metadata = { title: "AgentDB", description: "Explore. Verify. Hire." };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en"><body><Providers><SiteHeader />{children}<SiteFooter /></Providers></body></html>;

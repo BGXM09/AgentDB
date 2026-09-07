@@ -1356,7 +1356,7 @@ body .site-header .wordmark-db {
 .marketplace-filters {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr)) auto auto;
-  align-items: flex-end;
+  align-items: end;
   gap: 12px;
   margin-bottom: 42px;
   padding: 18px;
@@ -3383,7 +3383,7 @@ footer {
 }
 
 .marketplace-intro {
-  align-items: flex-end;
+  align-items: end;
   margin-bottom: 28px;
 }
 .marketplace-intro h1 {
@@ -3470,7 +3470,7 @@ footer {
   position: relative;
   display: flex;
   overflow: hidden;
-  align-items: flex-end;
+  align-items: end;
   justify-content: space-between;
   min-height: 280px;
   margin: 16px 0 44px;
@@ -3567,7 +3567,7 @@ footer {
 }
 .agent-storefront-hero {
   display: flex;
-  align-items: flex-end;
+  align-items: end;
   justify-content: space-between;
   gap: 40px;
   padding: 48px 0 42px;
@@ -3660,7 +3660,7 @@ footer {
 }
 .storefront-section-heading {
   display: flex;
-  align-items: flex-end;
+  align-items: end;
   justify-content: space-between;
   gap: 30px;
   margin-bottom: 30px;

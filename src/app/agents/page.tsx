@@ -13,8 +13,7 @@ type MarketplaceParams = { offset?: string; category?: string };
 export default async function AgentsPage({ searchParams }: { searchParams: Promise<MarketplaceParams> }) {
   const params = await searchParams;
   const category = categories.find((item) => item.slug === params.category);
-  const requestedOffset = Number(params.offset);
-  const offset = Number.isSafeInteger(requestedOffset) && requestedOffset >= 0 ? requestedOffset : 0;
+  const offset = category ? 0 : Math.max(0, Number(params.offset) || 0);
   const pageSize = CATEGORY_DISPLAY_DEPTH;
 
   let items: ScanAgentSummary[];
@@ -37,7 +36,7 @@ export default async function AgentsPage({ searchParams }: { searchParams: Promi
   const query = new URLSearchParams();
   if (category) query.set("category", category.slug);
   const pageHref = (nextOffset: number) => { const next = new URLSearchParams(query); if (nextOffset > 0) next.set("offset", String(nextOffset)); return `/agents${next.size ? `?${next}` : ""}`; };
-  const first = items.length === 0 ? 0 : offset + 1;
+  const first = total === 0 ? 0 : offset + 1;
   const last = Math.min(offset + items.length, total);
 
   return <main className="container page-content marketplace-page">
@@ -48,6 +47,6 @@ export default async function AgentsPage({ searchParams }: { searchParams: Promi
     <SearchBox compact />
     <div className="marketplace-results-heading"><h2>{category ? `${category.name} agents` : "Published agents"}</h2><span>{first.toLocaleString()}–{last.toLocaleString()} of {total.toLocaleString()}</span></div>
     <MarketplaceAgentList agents={items as ScanAgentDetail[]} />
-    {total > pageSize && <nav className="pagination" aria-label="Agent results pages">{offset > 0 ? <a href={pageHref(Math.max(0, offset - pageSize))}>Previous</a> : <span aria-disabled="true">Previous</span>}<span>Page {Math.floor(offset / pageSize) + 1}</span>{last < total ? <a href={pageHref(offset + pageSize)}>Next</a> : <span aria-disabled="true">Next</span>}</nav>}
+    {total > pageSize && <nav className="pagination" aria-label="Agent results pages"><Link aria-disabled={offset === 0} href={pageHref(Math.max(0, offset - pageSize))}>Previous</Link><span>Page {Math.floor(offset / pageSize) + 1}</span><Link aria-disabled={last >= total} href={pageHref(offset + pageSize)}>Next</Link></nav>}
   </main>;
 }

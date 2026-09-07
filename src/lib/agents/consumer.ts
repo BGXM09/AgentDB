@@ -1,5 +1,4 @@
 import type { AgentCategory, ScanAgentDetail } from "./types";
-import { agentEndpoints } from "./endpoints";
 
 export type ConsumerCategory = {
   action: string;
@@ -70,13 +69,36 @@ export function consumerTrust(agent: ScanAgentDetail) {
 }
 
 export function consumerConnections(agent: ScanAgentDetail) {
-  const endpoints = agentEndpoints(agent);
-  const labels = new Set(endpoints.map((endpoint) => endpoint.protocol === "Service" ? "Web service" : endpoint.protocol));
-  const endpointCount = endpoints.length;
+  const labels = new Set<string>();
+  const visit = (value: unknown, trail = "") => {
+    if (typeof value === "string") {
+      const clue = `${trail} ${value}`.toLowerCase();
+      if (clue.includes("x402")) labels.add("x402");
+      else if (clue.includes("mcp")) labels.add("MCP");
+      else if (clue.includes("a2a") || clue.includes("agent-card") || clue.includes(".well-known")) labels.add("A2A");
+      else if (/^https?:\/\//i.test(value.trim())) labels.add("Web service");
+      return;
+    }
+    if (Array.isArray(value)) value.forEach((item, index) => visit(item, `${trail} ${index}`));
+    else if (value && typeof value === "object") Object.entries(value as Record<string, unknown>).forEach(([key, item]) => visit(item, `${trail} ${key}`));
+  };
+
+  visit(agent.endpoints, "endpoints");
+  visit(agent.services, "services");
+  visit(agent.metadata, "metadata");
+  visit(agent.raw_metadata, "raw metadata");
+  agent.supported_protocols?.forEach((protocol) => visit(protocol, "protocol"));
+  if (agent.x402_supported) labels.add("x402");
+
+  const endpointCount = Array.isArray(agent.endpoints)
+    ? agent.endpoints.length
+    : Array.isArray(agent.services)
+      ? agent.services.length
+      : null;
   return {
     label: labels.size ? [...labels].join(" · ") : "No public endpoint",
     detail: endpointCount && endpointCount > 0
       ? `${endpointCount} published ${endpointCount === 1 ? "connection" : "connections"}`
-      : "Onchain identity only",
+      : labels.size ? "Connection details published" : "Onchain identity only",
   };
 }
